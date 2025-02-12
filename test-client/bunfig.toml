@@ -1,0 +1,4 @@
+[install.scopes]
+
+"@beelines" = { url = "https://npm.chainstarters.xyz", token = "$NPM_AUTH_TOKEN" }
+# "@beelines" = { url = "https://npm.beelines.ai", token = "$BEELINES_NPM_AUTH_TOKEN" }

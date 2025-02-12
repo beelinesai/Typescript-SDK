@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "outDir": "./build",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "types": ["node"]
+  },
+  "include": ["src"]
+}
