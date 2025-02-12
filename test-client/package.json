@@ -9,6 +9,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@beelines/sdk": "^0.1.0"
+    "@beelines/sdk": "^0.2.1"
   }
 }

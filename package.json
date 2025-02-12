@@ -2,6 +2,12 @@
   "name": "beelines-sdk",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "gen": "bun graphql-codegen --config codegen.ts",
+    "build": "rm -rf sdk/build && bun build --packages=external --sourcemap --outdir=sdk/build sdk/src/index.ts && (cd sdk && bun tsc)",
+    "pub": "(cd sdk && npm publish)"
+
+  },
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.4",
     "@graphql-codegen/typescript-graphql-request": "^6.2.0",

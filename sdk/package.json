@@ -1,6 +1,6 @@
 {
   "name": "@beelines/sdk",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "A Beelines SDK",
   "main": "build/index.js",
   "types": "build/index.d.ts",

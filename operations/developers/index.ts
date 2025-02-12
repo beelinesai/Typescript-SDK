@@ -10,19 +10,11 @@ export const CREATE_DEVELOPER = gql`
   ${DEVELOPER_FRAGMENT}
 `;
 
-export const GET_DEVELOPER = gql`
-  query getDeveloper($id: ID!) {
+export const DEVELOPER = gql`
+  query developer($id: ID!) {
     developer(id: $id) {
       ...DeveloperFields
-      authTokens {
-        ...AuthTokenFields
-      }
-      agents {
-        ...AgentWithRewardsFields
-      }
     }
   }
   ${DEVELOPER_FRAGMENT}
-  ${AUTH_TOKEN_FRAGMENT}
-  ${AGENT_WITH_REWARDS_FRAGMENT}
 `;

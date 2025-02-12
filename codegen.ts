@@ -5,11 +5,13 @@ const config: CodegenConfig = {
   documents: ['operations/**/*.ts'],
   overwrite: true,
   generates: {
-    'sdk/src/index.ts': {
+    'sdk/src/__generated__/index.ts': {
       plugins: ['typescript', 'typescript-operations', 'typescript-graphql-request'],
       config: {
-        rawRequest: true
-      },
+        rawRequest: true,
+        useTypeImports: true,
+        skipTypename: true
+      }
     },
   },
 };
