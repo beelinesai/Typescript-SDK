@@ -1,0 +1,501 @@
+scalar JSON
+
+type Query {
+  # Developers
+  developer(id: ID): Developer
+  # developers: [Developer!]!
+  # developerByEmail(email: String!): Developer
+  authTokens(developerId: ID!): [AuthToken!]!
+  authToken(token: String!, developerId: ID!): AuthToken
+
+  # Groups
+  groups: [Group!]!
+  group(id: ID!): Group
+  
+  # Agents
+  agent(id: ID!, developerId: ID!): Agent
+  agents(developerId: ID!): [Agent!]!
+  
+  # Knowledge
+  semanticKnowledge(agentId: ID!, type: String, context: String): [SemanticKnowledge!]!
+  
+  # Posts
+  postExamples(agentId: ID!, platform: String, context: String): [PostExample!]!
+  postExample(id: ID!, agentId: ID!): PostExample
+  
+  # Messages
+  messageExamples(agentId: ID!, context: String): [MessageExample!]!
+  messageExample(id: ID!, agentId: ID!): MessageExample
+
+  # Personality System
+  getLevelTwoTraits(agentId: ID): JSON
+
+  # Personality System
+  dimension(idOrHandle: String!): Dimension
+  dimensions: [Dimension!]!
+  aspect(idOrHandle: String!): Aspect
+  aspects: [Aspect!]!
+  trait(id: ID!): Trait
+  traits: [Trait!]!
+
+  # Agent Personality Traits
+  agentPersonalityTrait(id: ID!): AgentPersonalityTrait
+  agentPersonalityTraits(filters: AgentPersonalityTraitFiltersInput): [AgentPersonalityTrait!]!
+
+  # Audiences
+  audiences: [Audience!]!
+  audience(id: ID!): Audience
+
+  # Rewards
+  agentRewards(agentId: ID!): [Reward]
+}
+
+type Mutation {
+  # Groups
+  createGroup(input: CreateGroupInput!): Group!
+  updateGroup(id: ID!, input: UpdateGroupInput!): Boolean!
+  deleteGroup(id: ID!): Boolean!
+
+  # Rewards
+  claimReward(agentId: ID!, rewardId: ID!): Boolean!
+
+  # Developers
+  createDeveloper(email: String!): Developer!
+  getOrCreateDeveloper(email: String!): Developer!
+  deleteDeveloper(id: ID!): Boolean!
+  # updateDeveloper(id: ID!, input: UpdateDeveloperInput!): Developer!
+  createAuthToken(developerId: ID!, input: CreateAuthTokenInput!): AuthToken!
+  updateAuthToken(id: ID!, developerId: ID!, input: UpdateAuthTokenInput!): AuthToken!
+  deleteAuthToken(id: ID!, developerId: ID!): Boolean!
+
+  # Agents
+  createAgent(developerId: ID!, input: CreateAgentInput = {}): Agent!
+  updateAgent(id: ID!, developerId: ID!, input: UpdateAgentInput!): Boolean!
+  deleteAgent(id: ID!, developerId: ID!): Boolean!
+  
+  # Knowledge
+  addSemanticKnowledge(agentId: ID!, items: [AddSemanticKnowledgeInput!]!): [SemanticKnowledge!]!
+  updateSemanticKnowledge(agentId: ID!, id: ID!, input: UpdateSemanticKnowledgeInput!): SemanticKnowledge!
+  deleteSemanticKnowledge(agentId: ID!, id: ID!): Boolean!
+  
+  # Posts
+  addPostExamples(agentId: ID!, items: [AddPostExampleInput!]!): [PostExample!]!
+  updatePostExample(agentId: ID!, id: ID!, input: UpdatePostExampleInput!): PostExample!
+  deletePostExample(agentId: ID!, id: ID!): Boolean!
+  
+  # Messages
+  addMessageExamples(agentId: ID!, items: [AddMessageExampleInput!]!): [MessageExample!]!
+  updateMessageExample(agentId: ID!, id: ID!, input: UpdateMessageExampleInput!): MessageExample!
+  deleteMessageExample(agentId: ID!, id: ID!): Boolean!
+
+  # Personality System
+  createDimension(input: CreateDimensionInput!): Dimension!
+  updateDimension(id: ID!, input: UpdateDimensionInput!): Boolean!
+  deleteDimension(id: ID!): Boolean!
+  
+  createAspect(input: CreateAspectInput!): Aspect!
+  updateAspect(id: ID!, input: UpdateAspectInput!): Boolean!
+  deleteAspect(id: ID!): Boolean!
+  
+  createTrait(input: CreateTraitInput!): Trait!
+  updateTrait(id: ID!, input: UpdateTraitInput!): Boolean!
+  deleteTrait(id: ID!): Boolean!
+
+  # Agent Personality Traits
+  createAgentPersonalityTrait(agentId: ID!, input: CreateAgentPersonalityTraitInput!): AgentPersonalityTrait!
+  deleteAgentPersonalityTrait(agentId: ID!, id: ID!): Boolean!
+  createTraitAndAddToAgentPersonality(agentId: ID!, input: CreateTraitInput!): AgentPersonalityTrait!
+  
+  # not sure if these two are needed
+  # updateAgentPersonalityTrait(agentId: ID!, id: ID!, input: UpdateAgentPersonalityTraitInput!): Boolean!
+  # upsertAgentPersonalityTraits(agentId: ID!, traits: [CreateAgentPersonalityTraitInput!]!): [AgentPersonalityTrait!]!
+
+  # Audiences
+  createAudience(input: CreateAudienceInput!): Audience!
+  updateAudience(id: ID!, input: UpdateAudienceInput!): Boolean!
+  deleteAudience(id: ID!): Boolean!
+}
+
+type Reward {
+  id: ID!
+  rewardSpecificationId: ID!
+  amount: Float!
+  txHash: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+input CreateAudienceInput {
+  name: String!
+  description: String
+  apiKeyId: String
+  pricingModel: JSON
+  metadata: JSON
+}
+
+input UpdateAudienceInput {
+  name: String
+  description: String
+  pricingModel: JSON
+  metadata: JSON
+}
+
+type Audience {
+  id: ID!
+  name: String!
+  description: String
+  apiKeyId: String
+  pricingModel: JSON
+  metadata: JSON
+  createdAt: String!
+  updatedAt: String!
+}
+
+input CreateDeveloperTraitInput {
+  aspectId: ID!
+  name: String!
+  description: String!
+  isPublic: Boolean
+  metadata: JSON
+}
+
+type Developer {
+  id: ID!
+  email: String!
+  createdAt: String!
+  updatedAt: String!
+  organizationId: ID
+
+  authTokens: [AuthToken]
+  agents: [Agent]
+}
+
+type AuthToken {
+  id: ID!
+  developerId: ID!
+  token: String!
+  name: String
+  metadata: JSON
+  expiresAt: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+input CreateDeveloperInput {
+  email: String!
+}
+
+input UpdateDeveloperInput {
+  email: String!
+}
+
+input CreateAuthTokenInput {
+  name: String
+  metadata: JSON
+}
+
+input UpdateAuthTokenInput {
+  name: String
+  metadata: JSON
+}
+
+type Agent {
+  id: ID!
+  developerId: ID!
+  name: String!
+  characterData: CharacterData
+  config: AgentConfig
+  createdAt: String!
+  updatedAt: String!
+  audienceMembershipCount: Int
+  panelMembershipCount: Int
+  groupMembershipCount: Int
+  
+  rewardsGiven: [Reward]
+}
+
+type CharacterData {
+  id: ID!
+  agentId: ID!
+  bio: String!
+  lore: String
+  adjectives: [String!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type AgentConfig {
+  id: ID!
+  agentId: ID!
+  apis: JSON!
+  preferences: JSON!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input CreateAgentInput {
+  name: String
+  characterData: CreateCharacterDataInput
+  audienceId: ID
+}
+
+input CreateCharacterDataInput {
+  bio: String!
+  lore: String
+  adjectives: [String!]
+}
+
+input UpdateAgentInput {
+  name: String
+}
+
+type SemanticKnowledge {
+  id: ID!
+  agentId: ID!
+  type: String!
+  content: String!
+  context: String
+  metadata: JSON
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PostExample {
+  id: ID!
+  agentId: ID!
+  content: String!
+  platform: String!
+  context: String
+  tags: [String!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+type MessageExample {
+  id: ID!
+  agentId: ID!
+  content: String!
+  context: String
+  tags: [String!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+input AddSemanticKnowledgeInput {
+  type: String!
+  content: String!
+  context: String
+  metadata: JSON
+}
+
+input UpdateSemanticKnowledgeInput {
+  type: String
+  content: String
+  context: String
+  metadata: JSON
+}
+
+input AddPostExampleInput {
+  content: String!
+  platform: String!
+  context: String
+  tags: [String!]
+}
+
+input UpdatePostExampleInput {
+  content: String
+  platform: String
+  context: String
+  tags: [String!]
+}
+
+input AddMessageExampleInput {
+  content: String!
+  context: String
+  tags: [String!]
+}
+
+input UpdateMessageExampleInput {
+  content: String
+  context: String
+  tags: [String!]
+}
+
+###
+### PERSONALITY SYSTEM TYPES
+###
+
+type Dimension {
+  id: ID!
+  name: String!
+  description: String!
+  handle: String!
+  metadata: JSON
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Aspect {
+  id: ID!
+  dimensionId: ID!
+  name: String!
+  description: String!
+  handle: String!
+  metadata: JSON
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Trait {
+  id: ID!
+  aspectId: ID!
+  name: String!
+  description: String!
+  metadata: JSON
+  createdAt: String!
+  updatedAt: String!
+}
+
+###
+### ADMIN ONLY INPUTS
+###
+
+input CreateDimensionInput {
+  name: String!
+  description: String!
+  handle: String!
+  metadata: JSON
+}
+
+input UpdateDimensionInput {
+  name: String
+  description: String
+  handle: String
+  metadata: JSON
+}
+
+input CreateAspectInput {
+  dimensionId: ID!
+  name: String!
+  description: String!
+  handle: String!
+  metadata: JSON
+}
+
+input UpdateAspectInput {
+  name: String
+  description: String
+  handle: String
+  metadata: JSON
+}
+
+input CreateTraitInput {
+  aspectId: ID!
+  name: String!
+  description: String!
+  metadata: JSON
+  isPublic: Boolean = false
+}
+
+input UpdateTraitInput {
+  name: String
+  description: String
+  metadata: JSON
+}
+
+###
+### AGENT PERSONALITY TRAIT TYPES
+###
+
+type AgentPersonalityTrait {
+  id: ID!
+  agentId: ID!
+  dimensionId: ID
+  aspectId: ID
+  traitId: ID
+  systemWeight: Float!
+  relativeWeight: Float!
+  confidence: Float!
+  isCoreTrait: Boolean!
+  observationCount: Int!
+  lastObservedAt: String!
+  metadata: JSON
+  createdAt: String!
+  updatedAt: String!
+}
+
+input AgentPersonalityTraitFiltersInput {
+  agentId: ID
+  dimensionId: ID
+  aspectId: ID
+  traitId: ID
+  isCoreTrait: Boolean
+}
+
+input CreateAgentPersonalityTraitInput {
+  # dimensionId: ID
+  # aspectId: ID
+  traitId: ID!
+  systemWeight: Float = 1.0
+  relativeWeight: Float = 0.8
+  confidence: Float = 0.95
+  isCoreTrait: Boolean
+  metadata: JSON
+}
+
+# input UpdateAgentPersonalityTraitInput {
+#   systemWeight: Float
+#   relativeWeight: Float
+#   confidence: Float
+#   isCoreTrait: Boolean
+#   metadata: JSON
+# }
+
+type Group {
+  id: ID!
+  sourceId: ID!
+  sourceType: SourceType!
+  name: String
+  prompt: String
+  targetSize: Int
+  status: String!
+  metadata: JSON
+  createdAt: String!
+  updatedAt: String!
+
+  source: JSON
+}
+
+enum SourceType {
+  audience
+  panel
+  developer
+}
+
+enum GroupStatus {
+  forming
+  active
+  paused
+  completed
+}
+
+input CreateGroupInput {
+  name: String
+  prompt: String
+  targetSize: Int
+  status: GroupStatus = forming
+  metadata: JSON
+  agentIds: [ID!]
+  sourceId: ID!
+  sourceType: SourceType!
+}
+
+input UpdateGroupInput {
+  name: String
+  prompt: String
+  targetSize: Int
+  status: GroupStatus
+  metadata: JSON
+  sourceId: ID
+  sourceType: SourceType
+}

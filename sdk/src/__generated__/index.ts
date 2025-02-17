@@ -40,12 +40,15 @@ export type AddSemanticKnowledgeInput = {
 };
 
 export type Agent = {
+  audienceMembershipCount?: Maybe<Scalars['Int']['output']>;
   characterData?: Maybe<CharacterData>;
   config?: Maybe<AgentConfig>;
   createdAt: Scalars['String']['output'];
   developerId: Scalars['ID']['output'];
+  groupMembershipCount?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  panelMembershipCount?: Maybe<Scalars['Int']['output']>;
   rewardsGiven?: Maybe<Array<Maybe<Reward>>>;
   updatedAt: Scalars['String']['output'];
 };
@@ -189,11 +192,13 @@ export type CreateDimensionInput = {
 };
 
 export type CreateGroupInput = {
-  audienceId: Scalars['ID']['input'];
+  agentIds?: InputMaybe<Array<Scalars['ID']['input']>>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   prompt?: InputMaybe<Scalars['String']['input']>;
-  status: Scalars['String']['input'];
+  sourceId: Scalars['ID']['input'];
+  sourceType: SourceType;
+  status?: InputMaybe<GroupStatus>;
   targetSize?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -211,6 +216,7 @@ export type Developer = {
   createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  organizationId?: Maybe<Scalars['ID']['output']>;
   updatedAt: Scalars['String']['output'];
 };
 
@@ -225,16 +231,25 @@ export type Dimension = {
 };
 
 export type Group = {
-  audienceId?: Maybe<Scalars['ID']['output']>;
   createdAt: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   metadata?: Maybe<Scalars['JSON']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   prompt?: Maybe<Scalars['String']['output']>;
+  source?: Maybe<Scalars['JSON']['output']>;
+  sourceId: Scalars['ID']['output'];
+  sourceType: SourceType;
   status: Scalars['String']['output'];
   targetSize?: Maybe<Scalars['Int']['output']>;
   updatedAt: Scalars['String']['output'];
 };
+
+export enum GroupStatus {
+  Active = 'active',
+  Completed = 'completed',
+  Forming = 'forming',
+  Paused = 'paused'
+}
 
 export type MessageExample = {
   agentId: Scalars['ID']['output'];
@@ -662,6 +677,12 @@ export type SemanticKnowledge = {
   updatedAt: Scalars['String']['output'];
 };
 
+export enum SourceType {
+  Audience = 'audience',
+  Developer = 'developer',
+  Panel = 'panel'
+}
+
 export type Trait = {
   aspectId: Scalars['ID']['output'];
   createdAt: Scalars['String']['output'];
@@ -707,11 +728,12 @@ export type UpdateDimensionInput = {
 };
 
 export type UpdateGroupInput = {
-  audienceId?: InputMaybe<Scalars['ID']['input']>;
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   prompt?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  sourceId?: InputMaybe<Scalars['ID']['input']>;
+  sourceType?: InputMaybe<SourceType>;
+  status?: InputMaybe<GroupStatus>;
   targetSize?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -777,7 +799,41 @@ export type MessageExampleFieldsFragment = { id: string, agentId: string, conten
 
 export type AgentPersonalityTraitFieldsFragment = { id: string, agentId: string, aspectId?: string | null, traitId?: string | null, dimensionId?: string | null, systemWeight: number, relativeWeight: number, confidence: number, lastObservedAt: string, observationCount: number, metadata?: any | null, isCoreTrait: boolean, createdAt: string, updatedAt: string };
 
-export type GroupFieldsFragment = { id: string, audienceId?: string | null, name?: string | null, prompt?: string | null, targetSize?: number | null, status: string, metadata?: any | null, createdAt: string, updatedAt: string };
+export type GroupFieldsFragment = { id: string, sourceId: string, sourceType: SourceType, name?: string | null, prompt?: string | null, targetSize?: number | null, status: string, metadata?: any | null, createdAt: string, updatedAt: string, source?: any | null };
+
+export type CreateGroupMutationVariables = Exact<{
+  input: CreateGroupInput;
+}>;
+
+
+export type CreateGroupMutation = { createGroup: { id: string, sourceId: string, sourceType: SourceType, name?: string | null, prompt?: string | null, targetSize?: number | null, status: string, metadata?: any | null, createdAt: string, updatedAt: string, source?: any | null } };
+
+export type UpdateGroupMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  input: UpdateGroupInput;
+}>;
+
+
+export type UpdateGroupMutation = { updateGroup: boolean };
+
+export type DeleteGroupMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteGroupMutation = { deleteGroup: boolean };
+
+export type GetGroupsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetGroupsQuery = { groups: Array<{ id: string, sourceId: string, sourceType: SourceType, name?: string | null, prompt?: string | null, targetSize?: number | null, status: string, metadata?: any | null, createdAt: string, updatedAt: string, source?: any | null }> };
+
+export type GetGroupQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetGroupQuery = { group?: { id: string, sourceId: string, sourceType: SourceType, name?: string | null, prompt?: string | null, targetSize?: number | null, status: string, metadata?: any | null, createdAt: string, updatedAt: string, source?: any | null } | null };
 
 export const DeveloperFieldsFragmentDoc = gql`
     fragment DeveloperFields on Developer {
@@ -910,7 +966,8 @@ export const AgentPersonalityTraitFieldsFragmentDoc = gql`
 export const GroupFieldsFragmentDoc = gql`
     fragment GroupFields on Group {
   id
-  audienceId
+  sourceId
+  sourceType
   name
   prompt
   targetSize
@@ -918,6 +975,7 @@ export const GroupFieldsFragmentDoc = gql`
   metadata
   createdAt
   updatedAt
+  source
 }
     `;
 export const CreateDeveloperDocument = gql`
@@ -934,6 +992,47 @@ export const DeveloperDocument = gql`
   }
 }
     ${DeveloperFieldsFragmentDoc}`;
+export const CreateGroupDocument = gql`
+    mutation CreateGroup($input: CreateGroupInput!) {
+  createGroup(input: $input) {
+    id
+    sourceId
+    sourceType
+    name
+    prompt
+    targetSize
+    status
+    metadata
+    createdAt
+    updatedAt
+    source
+  }
+}
+    `;
+export const UpdateGroupDocument = gql`
+    mutation UpdateGroup($id: ID!, $input: UpdateGroupInput!) {
+  updateGroup(id: $id, input: $input)
+}
+    `;
+export const DeleteGroupDocument = gql`
+    mutation DeleteGroup($id: ID!) {
+  deleteGroup(id: $id)
+}
+    `;
+export const GetGroupsDocument = gql`
+    query GetGroups {
+  groups {
+    ...GroupFields
+  }
+}
+    ${GroupFieldsFragmentDoc}`;
+export const GetGroupDocument = gql`
+    query GetGroup($id: ID!) {
+  group(id: $id) {
+    ...GroupFields
+  }
+}
+    ${GroupFieldsFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -941,6 +1040,11 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType, _variables) => action();
 const CreateDeveloperDocumentString = print(CreateDeveloperDocument);
 const DeveloperDocumentString = print(DeveloperDocument);
+const CreateGroupDocumentString = print(CreateGroupDocument);
+const UpdateGroupDocumentString = print(UpdateGroupDocument);
+const DeleteGroupDocumentString = print(DeleteGroupDocument);
+const GetGroupsDocumentString = print(GetGroupsDocument);
+const GetGroupDocumentString = print(GetGroupDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     createDeveloper(variables: CreateDeveloperMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: CreateDeveloperMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
@@ -948,6 +1052,21 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     developer(variables: DeveloperQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: DeveloperQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeveloperQuery>(DeveloperDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'developer', 'query', variables);
+    },
+    CreateGroup(variables: CreateGroupMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: CreateGroupMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateGroupMutation>(CreateGroupDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateGroup', 'mutation', variables);
+    },
+    UpdateGroup(variables: UpdateGroupMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: UpdateGroupMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<UpdateGroupMutation>(UpdateGroupDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateGroup', 'mutation', variables);
+    },
+    DeleteGroup(variables: DeleteGroupMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: DeleteGroupMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteGroupMutation>(DeleteGroupDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeleteGroup', 'mutation', variables);
+    },
+    GetGroups(variables?: GetGroupsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetGroupsQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGroupsQuery>(GetGroupsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetGroups', 'query', variables);
+    },
+    GetGroup(variables: GetGroupQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetGroupQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetGroupQuery>(GetGroupDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetGroup', 'query', variables);
     }
   };
 }

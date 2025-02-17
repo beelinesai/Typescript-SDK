@@ -1,0 +1,14 @@
+# Import the fragment at the top of the file
+#import "./fragments.gql"
+
+query GetGroups {
+  groups {
+    ...GroupFields
+  }
+}
+
+query GetGroup($id: ID!) {
+  group(id: $id) {
+    ...GroupFields
+  }
+} 

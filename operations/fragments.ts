@@ -141,16 +141,15 @@ export const AGENT_PERSONALITY_TRAIT_FRAGMENT = gql`
   }
 `;
 
-export const GROUP_FRAGMENT = gql`
-  fragment GroupFields on Group {
-    id
-    audienceId
-    name
-    prompt
-    targetSize
-    status
-    metadata
-    createdAt
-    updatedAt
-  }
-`;
+// export const GROUP_FRAGMENT = gql`
+//   fragment GroupFields on Group {
+//     id
+//     name
+//     prompt
+//     targetSize
+//     status
+//     metadata
+//     createdAt
+//     updatedAt
+//   }
+// `;

@@ -1,1 +1,7 @@
-# A Chainstarters MetaKeep Library
+# Beelines SDK
+
+## Installation
+
+```bash
+bun add @beelines/sdk
+```

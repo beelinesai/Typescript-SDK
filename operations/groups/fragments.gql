@@ -1,0 +1,13 @@
+fragment GroupFields on Group {
+  id
+  sourceId
+  sourceType
+  name
+  prompt
+  targetSize
+  status
+  metadata
+  createdAt
+  updatedAt
+  source
+} 
