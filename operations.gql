@@ -1,0 +1,503 @@
+#######################
+# Reusable Fragments #
+#######################
+
+fragment GroupFields on Group {
+  id
+  sourceId
+  sourceType
+  name
+  prompt
+  targetSize
+  status
+  metadata
+  createdAt
+  updatedAt
+  source
+}
+
+fragment DeveloperFields on Developer {
+  id
+  email
+  createdAt
+  updatedAt
+  organizationId
+}
+
+fragment AuthTokenFields on AuthToken {
+  id
+  developerId
+  token
+  name
+  metadata
+  expiresAt
+  createdAt
+  updatedAt
+}
+
+fragment AgentFields on Agent {
+  id
+  developerId
+  name
+  characterData {
+    id
+    agentId
+    bio
+    lore
+    adjectives
+    createdAt
+    updatedAt
+  }
+  config {
+    id
+    agentId
+    apis
+    preferences
+    createdAt
+    updatedAt
+  }
+  createdAt
+  updatedAt
+  audienceMembershipCount
+  panelMembershipCount
+  groupMembershipCount
+  rewardsGiven {
+    id
+    amount
+    txHash
+    createdAt
+    updatedAt
+  }
+}
+
+fragment SemanticKnowledgeFields on SemanticKnowledge {
+  id
+  agentId
+  type
+  content
+  context
+  metadata
+  createdAt
+  updatedAt
+}
+
+fragment DimensionFields on Dimension {
+  id
+  name
+  description
+  handle
+  metadata
+  createdAt
+  updatedAt
+}
+
+fragment AspectFields on Aspect {
+  id
+  dimensionId
+  name
+  description
+  handle
+  metadata
+  createdAt
+  updatedAt
+}
+
+fragment TraitFields on Trait {
+  id
+  aspectId
+  name
+  description
+  metadata
+  createdAt
+  updatedAt
+}
+
+fragment PostExampleFields on PostExample {
+  id
+  agentId
+  content
+  platform
+  context
+  tags
+  createdAt
+  updatedAt
+}
+
+fragment MessageExampleFields on MessageExample {
+  id
+  agentId
+  content
+  context
+  tags
+  createdAt
+  updatedAt
+}
+
+fragment AgentPersonalityTraitFields on AgentPersonalityTrait {
+  id
+  agentId
+  dimensionId
+  aspectId
+  traitId
+  systemWeight
+  relativeWeight
+  confidence
+  isCoreTrait
+  observationCount
+  lastObservedAt
+  metadata
+  createdAt
+  updatedAt
+}
+
+fragment AudienceFields on Audience {
+  id
+  name
+  description
+  apiKeyId
+  pricingModel
+  metadata
+  createdAt
+  updatedAt
+}
+
+#######################
+# Query Operations   #
+#######################
+
+# Group Queries
+query groups {
+  groups {
+    ...GroupFields
+  }
+}
+
+query group($id: ID!) {
+  group(id: $id) {
+    ...GroupFields
+  }
+}
+
+# Developer Queries
+query developer($id: ID) {
+  developer(id: $id) {
+    ...DeveloperFields
+    authTokens {
+      ...AuthTokenFields
+    }
+  }
+}
+
+query authTokens($developerId: ID!) {
+  authTokens(developerId: $developerId) {
+    ...AuthTokenFields
+  }
+}
+
+query authToken($token: String!, $developerId: ID!) {
+  authToken(token: $token, developerId: $developerId) {
+    ...AuthTokenFields
+  }
+}
+
+# Agent Queries
+query agent($id: ID!, $developerId: ID!) {
+  agent(id: $id, developerId: $developerId) {
+    ...AgentFields
+  }
+}
+
+query agents($developerId: ID!) {
+  agents(developerId: $developerId) {
+    ...AgentFields
+  }
+}
+
+# Knowledge Queries
+query semanticKnowledge($agentId: ID!, $type: String, $context: String) {
+  semanticKnowledge(agentId: $agentId, type: $type, context: $context) {
+    ...SemanticKnowledgeFields
+  }
+}
+
+# Personality System Queries
+query dimension($idOrHandle: String!) {
+  dimension(idOrHandle: $idOrHandle) {
+    ...DimensionFields
+  }
+}
+
+query dimensions {
+  dimensions {
+    ...DimensionFields
+  }
+}
+
+query aspect($idOrHandle: String!) {
+  aspect(idOrHandle: $idOrHandle) {
+    ...AspectFields
+  }
+}
+
+query aspects {
+  aspects {
+    ...AspectFields
+  }
+}
+
+query trait($id: ID!) {
+  trait(id: $id) {
+    ...TraitFields
+  }
+}
+
+query traits {
+  traits {
+    ...TraitFields
+  }
+}
+
+# Posts Queries
+query postExamples($agentId: ID!, $platform: String, $context: String) {
+  postExamples(agentId: $agentId, platform: $platform, context: $context) {
+    ...PostExampleFields
+  }
+}
+
+query postExample($id: ID!, $agentId: ID!) {
+  postExample(id: $id, agentId: $agentId) {
+    ...PostExampleFields
+  }
+}
+
+# Messages Queries
+query messageExamples($agentId: ID!, $context: String) {
+  messageExamples(agentId: $agentId, context: $context) {
+    ...MessageExampleFields
+  }
+}
+
+query messageExample($id: ID!, $agentId: ID!) {
+  messageExample(id: $id, agentId: $agentId) {
+    ...MessageExampleFields
+  }
+}
+
+# Agent Personality Traits Queries
+query agentPersonalityTrait($id: ID!) {
+  agentPersonalityTrait(id: $id) {
+    ...AgentPersonalityTraitFields
+  }
+}
+
+query agentPersonalityTraits($filters: AgentPersonalityTraitFiltersInput) {
+  agentPersonalityTraits(filters: $filters) {
+    ...AgentPersonalityTraitFields
+  }
+}
+
+# Audiences Queries
+query audiences {
+  audiences {
+    ...AudienceFields
+  }
+}
+
+query audience($id: ID!) {
+  audience(id: $id) {
+    ...AudienceFields
+  }
+}
+
+#######################
+# Mutation Operations #
+#######################
+
+# Group Mutations
+mutation createGroup($input: CreateGroupInput!) {
+  createGroup(input: $input) {
+    ...GroupFields
+  }
+}
+
+mutation updateGroup($id: ID!, $input: UpdateGroupInput!) {
+  updateGroup(id: $id, input: $input)
+}
+
+mutation deleteGroup($id: ID!) {
+  deleteGroup(id: $id)
+}
+
+# Developer Mutations
+mutation createDeveloper($email: String!) {
+  createDeveloper(email: $email) {
+    ...DeveloperFields
+  }
+}
+
+mutation getOrCreateDeveloper($email: String!) {
+  getOrCreateDeveloper(email: $email) {
+    ...DeveloperFields
+  }
+}
+
+mutation deleteDeveloper($id: ID!) {
+  deleteDeveloper(id: $id)
+}
+
+mutation createAuthToken($developerId: ID!, $input: CreateAuthTokenInput!) {
+  createAuthToken(developerId: $developerId, input: $input) {
+    ...AuthTokenFields
+  }
+}
+
+mutation updateAuthToken($id: ID!, $developerId: ID!, $input: UpdateAuthTokenInput!) {
+  updateAuthToken(id: $id, developerId: $developerId, input: $input) {
+    ...AuthTokenFields
+  }
+}
+
+mutation deleteAuthToken($id: ID!, $developerId: ID!) {
+  deleteAuthToken(id: $id, developerId: $developerId)
+}
+
+# Agent Mutations
+mutation createAgent($developerId: ID!, $input: CreateAgentInput!) {
+  createAgent(developerId: $developerId, input: $input) {
+    ...AgentFields
+  }
+}
+
+mutation updateAgent($id: ID!, $developerId: ID!, $input: UpdateAgentInput!) {
+  updateAgent(id: $id, developerId: $developerId, input: $input)
+}
+
+mutation deleteAgent($id: ID!, $developerId: ID!) {
+  deleteAgent(id: $id, developerId: $developerId)
+}
+
+# Knowledge Mutations
+mutation addSemanticKnowledge($agentId: ID!, $items: [AddSemanticKnowledgeInput!]!) {
+  addSemanticKnowledge(agentId: $agentId, items: $items) {
+    ...SemanticKnowledgeFields
+  }
+}
+
+mutation updateSemanticKnowledge($agentId: ID!, $id: ID!, $input: UpdateSemanticKnowledgeInput!) {
+  updateSemanticKnowledge(agentId: $agentId, id: $id, input: $input) {
+    ...SemanticKnowledgeFields
+  }
+}
+
+mutation deleteSemanticKnowledge($agentId: ID!, $id: ID!) {
+  deleteSemanticKnowledge(agentId: $agentId, id: $id)
+}
+
+# Personality System Mutations
+mutation createDimension($input: CreateDimensionInput!) {
+  createDimension(input: $input) {
+    ...DimensionFields
+  }
+}
+
+mutation updateDimension($id: ID!, $input: UpdateDimensionInput!) {
+  updateDimension(id: $id, input: $input)
+}
+
+mutation deleteDimension($id: ID!) {
+  deleteDimension(id: $id)
+}
+
+mutation createAspect($input: CreateAspectInput!) {
+  createAspect(input: $input) {
+    ...AspectFields
+  }
+}
+
+mutation updateAspect($id: ID!, $input: UpdateAspectInput!) {
+  updateAspect(id: $id, input: $input)
+}
+
+mutation deleteAspect($id: ID!) {
+  deleteAspect(id: $id)
+}
+
+mutation createTrait($input: CreateTraitInput!) {
+  createTrait(input: $input) {
+    ...TraitFields
+  }
+}
+
+mutation updateTrait($id: ID!, $input: UpdateTraitInput!) {
+  updateTrait(id: $id, input: $input)
+}
+
+mutation deleteTrait($id: ID!) {
+  deleteTrait(id: $id)
+}
+
+# Posts Mutations
+mutation addPostExamples($agentId: ID!, $items: [AddPostExampleInput!]!) {
+  addPostExamples(agentId: $agentId, items: $items) {
+    ...PostExampleFields
+  }
+}
+
+mutation updatePostExample($agentId: ID!, $id: ID!, $input: UpdatePostExampleInput!) {
+  updatePostExample(agentId: $agentId, id: $id, input: $input) {
+    ...PostExampleFields
+  }
+}
+
+mutation deletePostExample($agentId: ID!, $id: ID!) {
+  deletePostExample(agentId: $agentId, id: $id)
+}
+
+# Messages Mutations
+mutation addMessageExamples($agentId: ID!, $items: [AddMessageExampleInput!]!) {
+  addMessageExamples(agentId: $agentId, items: $items) {
+    ...MessageExampleFields
+  }
+}
+
+mutation updateMessageExample($agentId: ID!, $id: ID!, $input: UpdateMessageExampleInput!) {
+  updateMessageExample(agentId: $agentId, id: $id, input: $input) {
+    ...MessageExampleFields
+  }
+}
+
+mutation deleteMessageExample($agentId: ID!, $id: ID!) {
+  deleteMessageExample(agentId: $agentId, id: $id)
+}
+
+# Agent Personality Traits Mutations
+mutation createAgentPersonalityTrait($agentId: ID!, $input: CreateAgentPersonalityTraitInput!) {
+  createAgentPersonalityTrait(agentId: $agentId, input: $input) {
+    ...AgentPersonalityTraitFields
+  }
+}
+
+mutation deleteAgentPersonalityTrait($agentId: ID!, $id: ID!) {
+  deleteAgentPersonalityTrait(agentId: $id, id: $id)
+}
+
+mutation createTraitAndAddToAgentPersonality($agentId: ID!, $input: CreateTraitInput!) {
+  createTraitAndAddToAgentPersonality(agentId: $agentId, input: $input) {
+    ...AgentPersonalityTraitFields
+  }
+}
+
+# Audiences Mutations
+mutation createAudience($input: CreateAudienceInput!) {
+  createAudience(input: $input) {
+    ...AudienceFields
+  }
+}
+
+mutation updateAudience($id: ID!, $input: UpdateAudienceInput!) {
+  updateAudience(id: $id, input: $input)
+}
+
+mutation deleteAudience($id: ID!) {
+  deleteAudience(id: $id)
+} 
