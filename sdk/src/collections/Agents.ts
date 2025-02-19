@@ -1,30 +1,26 @@
-import { Sdk } from '../__generated__/index';
+import type { Sdk } from '../__generated__/index';
+import { WrappedSdk } from '../types';
 
 export class Agents {
-  constructor(private sdk: Sdk) {}
+  constructor(private sdk: WrappedSdk<Sdk>) {}
 
   async create(developerId: string, input: { name: string; characterData?: any; audienceId?: string }) {
-    const result = await this.sdk.createAgent({ developerId, input });
-    return result.data.createAgent;
+    return await this.sdk.createAgent({ developerId, input });
   }
 
   async byId(id: string, developerId: string) {
-    const result = await this.sdk.agent({ id, developerId });
-    return result.data.agent;
+    return await this.sdk.agent({ id, developerId });
   }
 
   async list(developerId: string) {
-    const result = await this.sdk.agents({ developerId });
-    return result.data.agents;
+    return await this.sdk.agents({ developerId });
   }
 
   async update(id: string, developerId: string, input: { name?: string }) {
-    const result = await this.sdk.updateAgent({ id, developerId, input });
-    return result.data.updateAgent;
+    return await this.sdk.updateAgent({ id, developerId, input });
   }
 
   async delete(id: string, developerId: string) {
-    const result = await this.sdk.deleteAgent({ id, developerId });
-    return result.data.deleteAgent;
+    return await this.sdk.deleteAgent({ id, developerId });
   }
 }

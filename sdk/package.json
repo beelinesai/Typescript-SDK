@@ -1,14 +1,10 @@
 {
-  "name": "@beelines/sdk",
-  "version": "0.2.1",
+  "name": "@beelinesai/sdk",
+  "version": "0.3.0",
   "description": "A Beelines SDK",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://bitbucket.org/chainstarters/beelines-sdk.git"
-  },
-  "author": "Andy <andy@chainstarters.com>",
+  "author": "Chainstarters <chainstarters@beelines.ai>",
   "license": "",
   "devDependencies": {
     "@types/bun": "^1.2.2",
@@ -20,6 +16,8 @@
     "graphql-tag": "^2.12.6"
   },
   "publishConfig": {
-    "registry": "https://npm.chainstarters.xyz"
+    "registry": "https://registry.npmjs.org",
+    "access": "public",
+    "organization": "@beelinesai"
   }
 }

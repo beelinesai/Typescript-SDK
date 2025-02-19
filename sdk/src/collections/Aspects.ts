@@ -1,30 +1,26 @@
 import { Sdk } from '../__generated__/index';
+import { WrappedSdk } from '../types';
 
 export class Aspects {
-  constructor(private sdk: Sdk) {}
+  constructor(private sdk: WrappedSdk<Sdk>) {}
 
   async create(input: { dimensionId: string; name: string; description: string; handle: string; metadata?: any }) {
-    const result = await this.sdk.createAspect({ input });
-    return result.data.createAspect;
+    return await this.sdk.createAspect({ input });
   }
 
   async byIdOrHandle(idOrHandle: string) {
-    const result = await this.sdk.aspect({ idOrHandle });
-    return result.data.aspect;
+    return await this.sdk.aspect({ idOrHandle });
   }
 
   async list() {
-    const result = await this.sdk.aspects();
-    return result.data.aspects;
+    return await this.sdk.aspects();
   }
 
   async update(id: string, input: { name?: string; description?: string; handle?: string; metadata?: any }) {
-    const result = await this.sdk.updateAspect({ id, input });
-    return result.data.updateAspect;
+    return await this.sdk.updateAspect({ id, input });
   }
 
   async delete(id: string) {
-    const result = await this.sdk.deleteAspect({ id });
-    return result.data.deleteAspect;
+    return await this.sdk.deleteAspect({ id });
   }
 } 

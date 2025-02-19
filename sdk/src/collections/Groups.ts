@@ -1,30 +1,26 @@
-import { GroupStatus, Sdk, SourceType } from '../__generated__/index';
+import type { Sdk, GroupStatus, SourceType } from '../__generated__/index';
+import { WrappedSdk } from '../types';
 
 export class Groups {
-  constructor(private sdk: Sdk) {}
+  constructor(private sdk: WrappedSdk<Sdk>) {}
 
   async create(input: { name?: string; prompt?: string; targetSize?: number; status?: GroupStatus; metadata?: any; agentIds?: string[]; sourceId: string; sourceType: SourceType }) {
-    const result = await this.sdk.createGroup({ input });
-    return result.data.createGroup;
+    return await this.sdk.createGroup({ input });
   }
 
   async byId(id: string) {
-    const result = await this.sdk.group({ id });
-    return result.data.group;
+    return await this.sdk.group({ id });
   }
 
   async list() {
-    const result = await this.sdk.groups();
-    return result.data.groups;
+    return await this.sdk.groups();
   }
 
   async update(id: string, input: { name?: string; prompt?: string; targetSize?: number; status?: GroupStatus; metadata?: any; sourceId?: string; sourceType?: SourceType }) {
-    const result = await this.sdk.updateGroup({ id, input });
-    return result.data.updateGroup;
+    return await this.sdk.updateGroup({ id, input });
   }
 
   async delete(id: string) {
-    const result = await this.sdk.deleteGroup({ id });
-    return result.data.deleteGroup;
+    return await this.sdk.deleteGroup({ id });
   }
 } 

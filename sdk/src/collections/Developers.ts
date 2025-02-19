@@ -1,50 +1,42 @@
-import { Sdk } from '../__generated__/index';
+import type { Sdk } from '../__generated__/index';
+import { WrappedSdk } from '../types';
 
 export class Developers {
-  constructor(private sdk: Sdk) {}
+  constructor(private sdk: WrappedSdk<Sdk>) {}
 
   async create(input: { email: string }) {
-    const result = await this.sdk.createDeveloper({ email: input.email });
-    return result.data.createDeveloper;
+    return await this.sdk.createDeveloper({ email: input.email });
   }
 
   async byId(id: string) {
-    const result = await this.sdk.developer({ id });
-    return result.data.developer;
+    return await this.sdk.developer({ id });
   }
 
-  async getOrCreate(email: string) {
-    const result = await this.sdk.getOrCreateDeveloper({ email });
-    return result.data.getOrCreateDeveloper;
+  async byEmail(email: string) {
+    return await this.sdk.getOrCreateDeveloper({ email });
   }
 
   async delete(id: string) {
-    const result = await this.sdk.deleteDeveloper({ id });
-    return result.data.deleteDeveloper;
+    return await this.sdk.deleteDeveloper({ id });
   }
 
   async createToken(developerId: string, input: { name: string; metadata?: any }) {
-    const result = await this.sdk.createAuthToken({ developerId, input });
-    return result.data.createAuthToken;
+    return await this.sdk.createAuthToken({ developerId, input });
   }
 
   async updateToken(id: string, developerId: string, input: { name: string; metadata?: any }) {
-    const result = await this.sdk.updateAuthToken({ id, developerId, input });
-    return result.data.updateAuthToken;
+    return await this.sdk.updateAuthToken({ id, developerId, input });
   }
 
   async revokeToken(id: string, developerId: string) {
-    const result = await this.sdk.deleteAuthToken({ id, developerId });
-    return result.data.deleteAuthToken;
+    return await this.sdk.deleteAuthToken({ id, developerId });
   }
 
   async listTokens(developerId: string) {
-    const result = await this.sdk.authTokens({ developerId });
-    return result.data.authTokens;
+    return await this.sdk.authTokens({ developerId });
   }
 
   async getToken(token: string, developerId: string) {
-    const result = await this.sdk.authToken({ token, developerId });
-    return result.data.authToken;
+    return await this.sdk.authToken({ token, developerId });
   }
 }

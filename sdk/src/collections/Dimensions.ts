@@ -1,30 +1,26 @@
 import { Sdk } from '../__generated__/index';
+import { WrappedSdk } from '../types';
 
 export class Dimensions {
-  constructor(private sdk: Sdk) {}
+  constructor(private sdk: WrappedSdk<Sdk>) {}
 
   async create(input: { name: string; description: string; handle: string; metadata?: any }) {
-    const result = await this.sdk.createDimension({ input });
-    return result.data.createDimension;
+    return await this.sdk.createDimension({ input });
   }
 
   async byIdOrHandle(idOrHandle: string) {
-    const result = await this.sdk.dimension({ idOrHandle });
-    return result.data.dimension;
+    return await this.sdk.dimension({ idOrHandle });
   }
 
   async list() {
-    const result = await this.sdk.dimensions();
-    return result.data.dimensions;
+    return await this.sdk.dimensions();
   }
 
   async update(id: string, input: { name?: string; description?: string; handle?: string; metadata?: any }) {
-    const result = await this.sdk.updateDimension({ id, input });
-    return result.data.updateDimension;
+    return await this.sdk.updateDimension({ id, input });
   }
 
   async delete(id: string) {
-    const result = await this.sdk.deleteDimension({ id });
-    return result.data.deleteDimension;
+    return await this.sdk.deleteDimension({ id });
   }
 } 
