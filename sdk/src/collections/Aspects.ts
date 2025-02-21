@@ -1,10 +1,10 @@
-import { Sdk } from '../__generated__/index';
+import type { Sdk, CreateAspectInput, UpdateAspectInput } from '../__generated__/index';
 import { WrappedSdk } from '../types';
 
 export class Aspects {
   constructor(private sdk: WrappedSdk<Sdk>) {}
 
-  async create(input: { dimensionId: string; name: string; description: string; handle: string; metadata?: any }) {
+  async create(input: CreateAspectInput) {
     return await this.sdk.createAspect({ input });
   }
 
@@ -16,7 +16,7 @@ export class Aspects {
     return await this.sdk.aspects();
   }
 
-  async update(id: string, input: { name?: string; description?: string; handle?: string; metadata?: any }) {
+  async update(id: string, input: UpdateAspectInput) {
     return await this.sdk.updateAspect({ id, input });
   }
 

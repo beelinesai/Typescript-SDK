@@ -1,4 +1,4 @@
-import type { Sdk } from '../__generated__/index';
+import type { CreateAuthTokenInput, Sdk, UpdateAuthTokenInput } from '../__generated__/index';
 import { WrappedSdk } from '../types';
 
 export class Developers {
@@ -20,11 +20,11 @@ export class Developers {
     return await this.sdk.deleteDeveloper({ id });
   }
 
-  async createToken(developerId: string, input: { name: string; metadata?: any }) {
+  async createToken(developerId: string, input: CreateAuthTokenInput) {
     return await this.sdk.createAuthToken({ developerId, input });
   }
 
-  async updateToken(id: string, developerId: string, input: { name: string; metadata?: any }) {
+  async updateToken(id: string, developerId: string, input: UpdateAuthTokenInput) {
     return await this.sdk.updateAuthToken({ id, developerId, input });
   }
 

@@ -13,4 +13,4 @@ export type WrappedSdk<T> = {
       ? (...args: A) => Promise<UnwrapData<D>>
       : T[K]
     : T[K];
-}; 
+};

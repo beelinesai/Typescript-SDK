@@ -1061,7 +1061,21 @@ export type CreateAgentMutationVariables = Exact<{
 }>;
 
 
-export type CreateAgentMutation = { createAgent: { id: string, developerId: string, name: string, createdAt: string, updatedAt: string, audienceMembershipCount?: number | null, panelMembershipCount?: number | null, groupMembershipCount?: number | null, characterData?: { id: string, agentId: string, bio: string, lore?: string | null, adjectives: Array<string>, createdAt: string, updatedAt: string } | null, config?: { id: string, agentId: string, apis: any, preferences: any, createdAt: string, updatedAt: string } | null, rewardsGiven?: Array<{ id: string, amount: number, txHash?: string | null, createdAt: string, updatedAt: string } | null> | null } };
+export type CreateAgentMutation = { 
+  createAgent: { 
+    id: string, 
+    developerId: string, 
+    name: string, 
+    createdAt: string, 
+    updatedAt: string, 
+    audienceMembershipCount?: number | null, 
+    panelMembershipCount?: number | null, 
+    groupMembershipCount?: number | null, 
+    characterData?: { id: string, agentId: string, bio: string, lore?: string | null, adjectives: Array<string>, createdAt: string, updatedAt: string } | null, 
+    config?: { id: string, agentId: string, apis: any, preferences: any, createdAt: string, updatedAt: string } | null, 
+    rewardsGiven?: Array<{ id: string, amount: number, txHash?: string | null, createdAt: string, updatedAt: string } | null> | null 
+  } 
+};
 
 export type UpdateAgentMutationVariables = Exact<{
   id: Scalars['ID']['input'];

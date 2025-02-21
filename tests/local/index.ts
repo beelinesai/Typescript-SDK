@@ -1,4 +1,4 @@
-import { Beelines } from "../../sdk/src";
+import { Beelines, type Developer } from "../../sdk/src";
 import sbfCharacter from "../sbf.character.json";
 
 const client = new Beelines({
@@ -6,7 +6,7 @@ const client = new Beelines({
   apiKey: "bk_0fdc29961c71b5f7923c4ad56241dedb97b4a969ba9f4238342bd523c4a1a8dd"
 });
 
-const developer = await client.developers.byEmail("andymalkin@gmail.com");
+const developer: Developer = await client.developers.byEmail("andymalkin@gmail.com");
 
 try {
   const not = await client.developers.byId("123");

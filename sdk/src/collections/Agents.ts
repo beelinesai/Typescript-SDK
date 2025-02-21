@@ -1,11 +1,12 @@
-import type { Sdk } from '../__generated__/index';
+import type { Sdk, CreateAgentInput, UpdateAgentInput, GenerateAgentsInput } from '../__generated__/index';
 import { WrappedSdk } from '../types';
 import type { Character } from "@ai16z/eliza";
+
 
 export class Agents {
   constructor(private sdk: WrappedSdk<Sdk>) {}
 
-  async create(developerId: string, input: { name: string; characterData?: any; audienceId?: string }) {
+  async create(developerId: string, input: CreateAgentInput) {
     return await this.sdk.createAgent({ developerId, input });
   }
 
@@ -17,7 +18,7 @@ export class Agents {
     return await this.sdk.agents({ developerId });
   }
 
-  async update(id: string, developerId: string, input: { name?: string }) {
+  async update(id: string, developerId: string, input: UpdateAgentInput) {
     return await this.sdk.updateAgent({ id, developerId, input });
   }
 
@@ -25,7 +26,7 @@ export class Agents {
     return await this.sdk.deleteAgent({ id, developerId });
   }
 
-  async generate(developerId: string, input: { quantity?: number }) {
+  async generate(developerId: string, input: GenerateAgentsInput) {
     return await this.sdk.generateAgents({ developerId, input });
   }
 

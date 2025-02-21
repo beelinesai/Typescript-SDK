@@ -1,10 +1,10 @@
-import { Sdk } from '../__generated__/index';
+import type { CreateDimensionInput, Sdk, UpdateDimensionInput } from '../__generated__/index';
 import { WrappedSdk } from '../types';
 
 export class Dimensions {
   constructor(private sdk: WrappedSdk<Sdk>) {}
 
-  async create(input: { name: string; description: string; handle: string; metadata?: any }) {
+  async create(input: CreateDimensionInput) {
     return await this.sdk.createDimension({ input });
   }
 
@@ -16,7 +16,7 @@ export class Dimensions {
     return await this.sdk.dimensions();
   }
 
-  async update(id: string, input: { name?: string; description?: string; handle?: string; metadata?: any }) {
+  async update(id: string, input: UpdateDimensionInput) {
     return await this.sdk.updateDimension({ id, input });
   }
 

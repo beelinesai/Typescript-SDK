@@ -11,6 +11,9 @@ import { Dimensions } from './collections/Dimensions';
 import { Audiences } from './collections/Audiences';
 import { Aspects } from './collections/Aspects';
 
+// Types
+export type * from './__generated__/index';
+
 export class Beelines {
   private client: GraphQLClient;
   private sdk: WrappedSdk<Sdk>;
