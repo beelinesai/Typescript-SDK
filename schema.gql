@@ -72,6 +72,8 @@ type Mutation {
   createAgent(developerId: ID!, input: CreateAgentInput = {}): Agent!
   updateAgent(id: ID!, developerId: ID!, input: UpdateAgentInput!): Boolean!
   deleteAgent(id: ID!, developerId: ID!): Boolean!
+  generateAgents(developerId: ID!, input: GenerateAgentsInput!): [Agent!]!
+  importElizaAgent(developerId: ID!, input: JSON!): Agent!
   
   # Knowledge
   addSemanticKnowledge(agentId: ID!, items: [AddSemanticKnowledgeInput!]!): [SemanticKnowledge!]!
@@ -114,15 +116,12 @@ type Mutation {
   createAudience(input: CreateAudienceInput!): Audience!
   updateAudience(id: ID!, input: UpdateAudienceInput!): Boolean!
   deleteAudience(id: ID!): Boolean!
+  addToAudience(id: ID!, input: AddToAudienceInput!): Audience!
+  generateAudience(input: GenerateAudienceInput!): Audience!
 }
 
-type Reward {
-  id: ID!
-  rewardSpecificationId: ID!
-  amount: Float!
-  txHash: String
-  createdAt: String!
-  updatedAt: String!
+input GenerateAgentsInput {
+  quantity: Int = 1
 }
 
 input CreateAudienceInput {
@@ -132,6 +131,23 @@ input CreateAudienceInput {
   pricingModel: JSON
   metadata: JSON
 }
+
+input AddToAudienceInput {
+  prompt: String
+  size: Int = 10
+}
+
+input GenerateAudienceInput {
+  name: String!
+  description: String
+  apiKeyId: String
+  pricingModel: JSON
+  metadata: JSON
+  prompt: String
+  size: Int = 10
+}
+
+
 
 input UpdateAudienceInput {
   name: String
@@ -147,6 +163,16 @@ type Audience {
   apiKeyId: String
   pricingModel: JSON
   metadata: JSON
+  createdAt: String!
+  updatedAt: String!
+  memberCount: Int
+}
+
+type Reward {
+  id: ID!
+  rewardSpecificationId: ID!
+  amount: Float!
+  txHash: String
   createdAt: String!
   updatedAt: String!
 }
@@ -482,7 +508,7 @@ enum GroupStatus {
 input CreateGroupInput {
   name: String
   prompt: String
-  targetSize: Int
+  targetSize: Int = 10
   status: GroupStatus = forming
   metadata: JSON
   agentIds: [ID!]

@@ -500,4 +500,30 @@ mutation updateAudience($id: ID!, $input: UpdateAudienceInput!) {
 
 mutation deleteAudience($id: ID!) {
   deleteAudience(id: $id)
+}
+
+# New Agent Mutations
+mutation generateAgents($developerId: ID!, $input: GenerateAgentsInput!) {
+  generateAgents(developerId: $developerId, input: $input) {
+    ...AgentFields
+  }
+}
+
+mutation importElizaAgent($developerId: ID!, $input: JSON!) {
+  importElizaAgent(developerId: $developerId, input: $input) {
+    ...AgentFields
+  }
+}
+
+# New Audience Mutations
+mutation addToAudience($id: ID!, $input: AddToAudienceInput!) {
+  addToAudience(id: $id, input: $input) {
+    ...AudienceFields
+  }
+}
+
+mutation generateAudience($input: GenerateAudienceInput!) {
+  generateAudience(input: $input) {
+    ...AudienceFields
+  }
 } 

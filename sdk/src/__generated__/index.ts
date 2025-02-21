@@ -39,6 +39,11 @@ export type AddSemanticKnowledgeInput = {
   type: Scalars['String']['input'];
 };
 
+export type AddToAudienceInput = {
+  prompt?: InputMaybe<Scalars['String']['input']>;
+  size?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type Agent = {
   audienceMembershipCount?: Maybe<Scalars['Int']['output']>;
   characterData?: Maybe<CharacterData>;
@@ -103,6 +108,7 @@ export type Audience = {
   createdAt: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  memberCount?: Maybe<Scalars['Int']['output']>;
   metadata?: Maybe<Scalars['JSON']['output']>;
   name: Scalars['String']['output'];
   pricingModel?: Maybe<Scalars['JSON']['output']>;
@@ -230,6 +236,20 @@ export type Dimension = {
   updatedAt: Scalars['String']['output'];
 };
 
+export type GenerateAgentsInput = {
+  quantity?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type GenerateAudienceInput = {
+  apiKeyId?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  name: Scalars['String']['input'];
+  pricingModel?: InputMaybe<Scalars['JSON']['input']>;
+  prompt?: InputMaybe<Scalars['String']['input']>;
+  size?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type Group = {
   createdAt: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -265,6 +285,7 @@ export type Mutation = {
   addMessageExamples: Array<MessageExample>;
   addPostExamples: Array<PostExample>;
   addSemanticKnowledge: Array<SemanticKnowledge>;
+  addToAudience: Audience;
   claimReward: Scalars['Boolean']['output'];
   createAgent: Agent;
   createAgentPersonalityTrait: AgentPersonalityTrait;
@@ -288,7 +309,10 @@ export type Mutation = {
   deletePostExample: Scalars['Boolean']['output'];
   deleteSemanticKnowledge: Scalars['Boolean']['output'];
   deleteTrait: Scalars['Boolean']['output'];
+  generateAgents: Array<Agent>;
+  generateAudience: Audience;
   getOrCreateDeveloper: Developer;
+  importElizaAgent: Agent;
   updateAgent: Scalars['Boolean']['output'];
   updateAspect: Scalars['Boolean']['output'];
   updateAudience: Scalars['Boolean']['output'];
@@ -317,6 +341,12 @@ export type MutationAddPostExamplesArgs = {
 export type MutationAddSemanticKnowledgeArgs = {
   agentId: Scalars['ID']['input'];
   items: Array<AddSemanticKnowledgeInput>;
+};
+
+
+export type MutationAddToAudienceArgs = {
+  id: Scalars['ID']['input'];
+  input: AddToAudienceInput;
 };
 
 
@@ -446,8 +476,25 @@ export type MutationDeleteTraitArgs = {
 };
 
 
+export type MutationGenerateAgentsArgs = {
+  developerId: Scalars['ID']['input'];
+  input: GenerateAgentsInput;
+};
+
+
+export type MutationGenerateAudienceArgs = {
+  input: GenerateAudienceInput;
+};
+
+
 export type MutationGetOrCreateDeveloperArgs = {
   email: Scalars['String']['input'];
+};
+
+
+export type MutationImportElizaAgentArgs = {
+  developerId: Scalars['ID']['input'];
+  input: Scalars['JSON']['input'];
 };
 
 
@@ -1220,6 +1267,37 @@ export type DeleteAudienceMutationVariables = Exact<{
 
 export type DeleteAudienceMutation = { deleteAudience: boolean };
 
+export type GenerateAgentsMutationVariables = Exact<{
+  developerId: Scalars['ID']['input'];
+  input: GenerateAgentsInput;
+}>;
+
+
+export type GenerateAgentsMutation = { generateAgents: Array<{ id: string, developerId: string, name: string, createdAt: string, updatedAt: string, audienceMembershipCount?: number | null, panelMembershipCount?: number | null, groupMembershipCount?: number | null, characterData?: { id: string, agentId: string, bio: string, lore?: string | null, adjectives: Array<string>, createdAt: string, updatedAt: string } | null, config?: { id: string, agentId: string, apis: any, preferences: any, createdAt: string, updatedAt: string } | null, rewardsGiven?: Array<{ id: string, amount: number, txHash?: string | null, createdAt: string, updatedAt: string } | null> | null }> };
+
+export type ImportElizaAgentMutationVariables = Exact<{
+  developerId: Scalars['ID']['input'];
+  input: Scalars['JSON']['input'];
+}>;
+
+
+export type ImportElizaAgentMutation = { importElizaAgent: { id: string, developerId: string, name: string, createdAt: string, updatedAt: string, audienceMembershipCount?: number | null, panelMembershipCount?: number | null, groupMembershipCount?: number | null, characterData?: { id: string, agentId: string, bio: string, lore?: string | null, adjectives: Array<string>, createdAt: string, updatedAt: string } | null, config?: { id: string, agentId: string, apis: any, preferences: any, createdAt: string, updatedAt: string } | null, rewardsGiven?: Array<{ id: string, amount: number, txHash?: string | null, createdAt: string, updatedAt: string } | null> | null } };
+
+export type AddToAudienceMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  input: AddToAudienceInput;
+}>;
+
+
+export type AddToAudienceMutation = { addToAudience: { id: string, name: string, description?: string | null, apiKeyId?: string | null, pricingModel?: any | null, metadata?: any | null, createdAt: string, updatedAt: string } };
+
+export type GenerateAudienceMutationVariables = Exact<{
+  input: GenerateAudienceInput;
+}>;
+
+
+export type GenerateAudienceMutation = { generateAudience: { id: string, name: string, description?: string | null, apiKeyId?: string | null, pricingModel?: any | null, metadata?: any | null, createdAt: string, updatedAt: string } };
+
 export const GroupFieldsFragmentDoc = gql`
     fragment GroupFields on Group {
   id
@@ -1765,6 +1843,34 @@ export const DeleteAudienceDocument = gql`
   deleteAudience(id: $id)
 }
     `;
+export const GenerateAgentsDocument = gql`
+    mutation generateAgents($developerId: ID!, $input: GenerateAgentsInput!) {
+  generateAgents(developerId: $developerId, input: $input) {
+    ...AgentFields
+  }
+}
+    ${AgentFieldsFragmentDoc}`;
+export const ImportElizaAgentDocument = gql`
+    mutation importElizaAgent($developerId: ID!, $input: JSON!) {
+  importElizaAgent(developerId: $developerId, input: $input) {
+    ...AgentFields
+  }
+}
+    ${AgentFieldsFragmentDoc}`;
+export const AddToAudienceDocument = gql`
+    mutation addToAudience($id: ID!, $input: AddToAudienceInput!) {
+  addToAudience(id: $id, input: $input) {
+    ...AudienceFields
+  }
+}
+    ${AudienceFieldsFragmentDoc}`;
+export const GenerateAudienceDocument = gql`
+    mutation generateAudience($input: GenerateAudienceInput!) {
+  generateAudience(input: $input) {
+    ...AudienceFields
+  }
+}
+    ${AudienceFieldsFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -1828,6 +1934,10 @@ const CreateTraitAndAddToAgentPersonalityDocumentString = print(CreateTraitAndAd
 const CreateAudienceDocumentString = print(CreateAudienceDocument);
 const UpdateAudienceDocumentString = print(UpdateAudienceDocument);
 const DeleteAudienceDocumentString = print(DeleteAudienceDocument);
+const GenerateAgentsDocumentString = print(GenerateAgentsDocument);
+const ImportElizaAgentDocumentString = print(ImportElizaAgentDocument);
+const AddToAudienceDocumentString = print(AddToAudienceDocument);
+const GenerateAudienceDocumentString = print(GenerateAudienceDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     groups(variables?: GroupsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GroupsQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
@@ -2003,6 +2113,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     deleteAudience(variables: DeleteAudienceMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: DeleteAudienceMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteAudienceMutation>(DeleteAudienceDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteAudience', 'mutation', variables);
+    },
+    generateAgents(variables: GenerateAgentsMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GenerateAgentsMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GenerateAgentsMutation>(GenerateAgentsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'generateAgents', 'mutation', variables);
+    },
+    importElizaAgent(variables: ImportElizaAgentMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: ImportElizaAgentMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<ImportElizaAgentMutation>(ImportElizaAgentDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'importElizaAgent', 'mutation', variables);
+    },
+    addToAudience(variables: AddToAudienceMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: AddToAudienceMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<AddToAudienceMutation>(AddToAudienceDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addToAudience', 'mutation', variables);
+    },
+    generateAudience(variables: GenerateAudienceMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GenerateAudienceMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GenerateAudienceMutation>(GenerateAudienceDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'generateAudience', 'mutation', variables);
     }
   };
 }

@@ -23,4 +23,12 @@ export class Audiences {
   async delete(id: string) {
     return await this.sdk.deleteAudience({ id });
   }
+
+  async addTo(id: string, input: { prompt?: string; size?: number }) {
+    return await this.sdk.addToAudience({ id, input });
+  }
+
+  async generate(input: { name: string; description?: string; apiKeyId?: string; pricingModel?: any; metadata?: any; prompt?: string; size?: number }) {
+    return await this.sdk.generateAudience({ input });
+  }
 } 

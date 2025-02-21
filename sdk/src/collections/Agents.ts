@@ -1,5 +1,6 @@
 import type { Sdk } from '../__generated__/index';
 import { WrappedSdk } from '../types';
+import type { Character } from "@ai16z/eliza";
 
 export class Agents {
   constructor(private sdk: WrappedSdk<Sdk>) {}
@@ -22,5 +23,13 @@ export class Agents {
 
   async delete(id: string, developerId: string) {
     return await this.sdk.deleteAgent({ id, developerId });
+  }
+
+  async generate(developerId: string, input: { quantity?: number }) {
+    return await this.sdk.generateAgents({ developerId, input });
+  }
+
+  async importEliza(developerId: string, input: Character) {
+    return await this.sdk.importElizaAgent({ developerId, input });
   }
 }

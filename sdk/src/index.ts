@@ -13,7 +13,7 @@ import { Aspects } from './collections/Aspects';
 
 export class Beelines {
   private client: GraphQLClient;
-  private sdk: Sdk | WrappedSdk<Sdk>;
+  private sdk: WrappedSdk<Sdk>;
   public readonly developers: Developers;
   public readonly agents: Agents;
   public readonly groups: Groups;
@@ -25,9 +25,9 @@ export class Beelines {
   constructor(config: { endpoint: string, apiKey: string }) {
     this.client = new GraphQLClient(config.endpoint);
     this.client.setHeader('Authorization', `Bearer ${config.apiKey}`);
-    this.sdk = getSdk(this.client);
+    const sdk = getSdk(this.client);
     // Wrap all sdk functions to have unified error handling
-    this.sdk = this.wrapSdkFunctions(this.sdk) as WrappedSdk<Sdk>;
+    this.sdk = this.wrapSdkFunctions(sdk);
 
     this.developers = new Developers(this.sdk);
     this.agents = new Agents(this.sdk);
@@ -38,37 +38,45 @@ export class Beelines {
     this.aspects = new Aspects(this.sdk);
   }
 
-  // This method wraps each function in the sdk and ensures it returns an object of the shape:
+  // This method wraps each function in the sdk and ensures it returns result data directly, or throws
   // { result: T, errors: Error[], success: boolean }
-  private wrapSdkFunctions(sdk: any): any {
+  private wrapSdkFunctions(sdk: Sdk): WrappedSdk<Sdk> {
     const wrapped: any = {};
-    for (const key in sdk) {
+    for (const k in sdk) {
+      const key = k as keyof Sdk; // fixes the type issue of 'key in obj'
+      
       if (typeof sdk[key] === 'function') {
         const originalFn = sdk[key];
         wrapped[key] = async (...args: any[]) => {
+
           try {
+            // @ts-ignore
             const res = await originalFn(...args);
-            let data = res;
             if (res && typeof res === 'object' && 'data' in res) {
               const d = res.data;
-              data = (d && typeof d === 'object' && Object.keys(d).length === 1) ? Object.values(d)[0] : d;
+              return (d && typeof d === 'object' && Object.keys(d).length === 1) ? Object.values(d)[0] : d;
             }
-            // Handle errors from successful response
-            const errors = (res && res.errors) ? res.errors : [];
-            return { result: data, errors, success: errors.length === 0 };
+            // Handle errors from successful response (not sure we will ever have this)
+            // const errors = res?.errors ?? [];
+            // return { result: data, errors, success: errors.length === 0 };
+            return res;
+
           } catch (e: any) {
+
             // Handle GraphQL response errors
             if (e.response && Array.isArray(e.response.errors)) {
-              return { result: null, errors: e.response.errors, success: false };
+              throw e.response.errors
+              // return { result: null, errors: e.response.errors, success: false };
             }
             // Handle any other errors
-            return { result: null, errors: [e], success: false };
+            throw e;
+            // return { result: null, errors: [e], success: false };
           }
         };
       } else {
         wrapped[key] = sdk[key];
       }
     }
-    return wrapped;
+    return wrapped as WrappedSdk<Sdk>;
   }
 }
