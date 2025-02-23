@@ -126,6 +126,82 @@ export type AuthToken = {
   updatedAt: Scalars['String']['output'];
 };
 
+export enum AvailableModels {
+  Gemini_1_5Flash = 'gemini_1_5_flash',
+  Gemini_1_5Flash_001 = 'gemini_1_5_flash_001',
+  Gemini_1_5Flash_002 = 'gemini_1_5_flash_002',
+  Gemini_1_5Flash_8b = 'gemini_1_5_flash_8b',
+  Gemini_1_5Flash_8b_001 = 'gemini_1_5_flash_8b_001',
+  Gemini_1_5Flash_8bLatest = 'gemini_1_5_flash_8b_latest',
+  Gemini_1_5FlashLatest = 'gemini_1_5_flash_latest',
+  Gemini_1_5Pro = 'gemini_1_5_pro',
+  Gemini_1_5Pro_001 = 'gemini_1_5_pro_001',
+  Gemini_1_5Pro_002 = 'gemini_1_5_pro_002',
+  Gemini_1_5ProLatest = 'gemini_1_5_pro_latest',
+  Gemini_2_0Flash_001 = 'gemini_2_0_flash_001',
+  Gemini_2_0FlashExp = 'gemini_2_0_flash_exp',
+  Gemini_2_0FlashLitePreview_02_05 = 'gemini_2_0_flash_lite_preview_02_05',
+  Gemini_2_0FlashThinkingExp_01_21 = 'gemini_2_0_flash_thinking_exp_01_21',
+  Gemini_2_0ProExp_02_05 = 'gemini_2_0_pro_exp_02_05',
+  GeminiExp_1206 = 'gemini_exp_1206',
+  Gpt_3_5Turbo = 'gpt_3_5_turbo',
+  Gpt_3_5Turbo_0125 = 'gpt_3_5_turbo_0125',
+  Gpt_3_5Turbo_1106 = 'gpt_3_5_turbo_1106',
+  Gpt_4 = 'gpt_4',
+  Gpt_4_0125Preview = 'gpt_4_0125_preview',
+  Gpt_4_0613 = 'gpt_4_0613',
+  Gpt_4_1106Preview = 'gpt_4_1106_preview',
+  Gpt_4Turbo = 'gpt_4_turbo',
+  Gpt_4Turbo_2024_04_09 = 'gpt_4_turbo_2024_04_09',
+  Gpt_4TurboPreview = 'gpt_4_turbo_preview',
+  Gpt_4o = 'gpt_4o',
+  Gpt_4o_2024_05_13 = 'gpt_4o_2024_05_13',
+  Gpt_4o_2024_08_06 = 'gpt_4o_2024_08_06',
+  Gpt_4o_2024_11_20 = 'gpt_4o_2024_11_20',
+  Gpt_4oAudioPreview = 'gpt_4o_audio_preview',
+  Gpt_4oAudioPreview_2024_10_01 = 'gpt_4o_audio_preview_2024_10_01',
+  Gpt_4oAudioPreview_2024_12_17 = 'gpt_4o_audio_preview_2024_12_17',
+  Gpt_4oMini = 'gpt_4o_mini',
+  Gpt_4oMini_2024_07_18 = 'gpt_4o_mini_2024_07_18',
+  Learnlm_1_5ProExperimental = 'learnlm_1_5_pro_experimental',
+  O1 = 'o1',
+  O1_2024_12_17 = 'o1_2024_12_17',
+  O1Mini = 'o1_mini',
+  O1Mini_2024_09_12 = 'o1_mini_2024_09_12',
+  O1Preview = 'o1_preview',
+  O1Preview_2024_09_12 = 'o1_preview_2024_09_12',
+  O3Mini = 'o3_mini',
+  O3Mini_2025_01_31 = 'o3_mini_2025_01_31'
+}
+
+export type Beeline = {
+  cohortSummary?: Maybe<Scalars['String']['output']>;
+  cohorts?: Maybe<Scalars['JSON']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  errorDetails?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  organizationId?: Maybe<Scalars['ID']['output']>;
+  status?: Maybe<BeelineStatus>;
+  summarizationPrompt?: Maybe<Scalars['String']['output']>;
+  targetId?: Maybe<Scalars['ID']['output']>;
+  targetType?: Maybe<Scalars['String']['output']>;
+  threadId?: Maybe<Scalars['ID']['output']>;
+  threadMessageId?: Maybe<Scalars['ID']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type BeelineResponse = {
+  agentId: Scalars['ID']['output'];
+  response: Scalars['JSON']['output'];
+};
+
+export enum BeelineStatus {
+  Completed = 'completed',
+  Error = 'error',
+  Pending = 'pending',
+  Processing = 'processing'
+}
+
 export type CharacterData = {
   adjectives: Array<Scalars['String']['output']>;
   agentId: Scalars['ID']['output'];
@@ -134,6 +210,27 @@ export type CharacterData = {
   id: Scalars['ID']['output'];
   lore?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['String']['output'];
+};
+
+export type Chat = {
+  latestThread: LatestThread;
+  threads: Array<ThreadLite>;
+};
+
+export type ChatSource = {
+  sourceId: Scalars['ID']['input'];
+  sourceType: ChatSourceType;
+};
+
+export enum ChatSourceType {
+  Agent = 'agent',
+  Group = 'group'
+}
+
+export type CompletedBeeline = {
+  responses?: Maybe<Array<Maybe<BeelineResponse>>>;
+  status: BeelineStatus;
+  summary?: Maybe<Scalars['String']['output']>;
 };
 
 export type CreateAgentInput = {
@@ -170,6 +267,19 @@ export type CreateAudienceInput = {
 export type CreateAuthTokenInput = {
   metadata?: InputMaybe<Scalars['JSON']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateBeelineInput = {
+  content: Scalars['String']['input'];
+  inResponseToId?: InputMaybe<Scalars['ID']['input']>;
+  interactionId?: InputMaybe<Scalars['ID']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  model?: InputMaybe<AvailableModels>;
+  responseType?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Role>;
+  senderId?: InputMaybe<Scalars['ID']['input']>;
+  senderType: SenderType;
+  summarizationPrompt?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateCharacterDataInput = {
@@ -271,6 +381,22 @@ export enum GroupStatus {
   Paused = 'paused'
 }
 
+export type LatestThread = {
+  createdAt: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  messages: Array<Maybe<ThreadMessage>>;
+  metadata?: Maybe<ThreadMetadata>;
+  name: Scalars['String']['output'];
+  organizationId: Scalars['ID']['output'];
+  pendingBeeline?: Maybe<Scalars['Boolean']['output']>;
+  settings?: Maybe<ThreadSetting>;
+  sourceId: Scalars['String']['output'];
+  sourceType: ChatSourceType;
+  stats?: Maybe<ThreadStats>;
+  status: ThreadStatus;
+  updatedAt: Scalars['String']['output'];
+};
+
 export type MessageExample = {
   agentId: Scalars['ID']['output'];
   content: Scalars['String']['output'];
@@ -289,21 +415,19 @@ export type Mutation = {
   claimReward: Scalars['Boolean']['output'];
   createAgent: Agent;
   createAgentPersonalityTrait: AgentPersonalityTrait;
-  createAspect: Aspect;
   createAudience: Audience;
   createAuthToken: AuthToken;
+  createBeeline: Scalars['ID']['output'];
   createDeveloper: Developer;
-  createDimension: Dimension;
   createGroup: Group;
+  createThread: Scalars['ID']['output'];
   createTrait: Trait;
   createTraitAndAddToAgentPersonality: AgentPersonalityTrait;
   deleteAgent: Scalars['Boolean']['output'];
   deleteAgentPersonalityTrait: Scalars['Boolean']['output'];
-  deleteAspect: Scalars['Boolean']['output'];
   deleteAudience: Scalars['Boolean']['output'];
   deleteAuthToken: Scalars['Boolean']['output'];
   deleteDeveloper: Scalars['Boolean']['output'];
-  deleteDimension: Scalars['Boolean']['output'];
   deleteGroup: Scalars['Boolean']['output'];
   deleteMessageExample: Scalars['Boolean']['output'];
   deletePostExample: Scalars['Boolean']['output'];
@@ -313,11 +437,10 @@ export type Mutation = {
   generateAudience: Audience;
   getOrCreateDeveloper: Developer;
   importElizaAgent: Agent;
+  openChat: Chat;
   updateAgent: Scalars['Boolean']['output'];
-  updateAspect: Scalars['Boolean']['output'];
   updateAudience: Scalars['Boolean']['output'];
   updateAuthToken: AuthToken;
-  updateDimension: Scalars['Boolean']['output'];
   updateGroup: Scalars['Boolean']['output'];
   updateMessageExample: MessageExample;
   updatePostExample: PostExample;
@@ -368,11 +491,6 @@ export type MutationCreateAgentPersonalityTraitArgs = {
 };
 
 
-export type MutationCreateAspectArgs = {
-  input: CreateAspectInput;
-};
-
-
 export type MutationCreateAudienceArgs = {
   input: CreateAudienceInput;
 };
@@ -384,18 +502,25 @@ export type MutationCreateAuthTokenArgs = {
 };
 
 
+export type MutationCreateBeelineArgs = {
+  input: CreateBeelineInput;
+  threadId: Scalars['ID']['input'];
+};
+
+
 export type MutationCreateDeveloperArgs = {
   email: Scalars['String']['input'];
 };
 
 
-export type MutationCreateDimensionArgs = {
-  input: CreateDimensionInput;
+export type MutationCreateGroupArgs = {
+  input: CreateGroupInput;
 };
 
 
-export type MutationCreateGroupArgs = {
-  input: CreateGroupInput;
+export type MutationCreateThreadArgs = {
+  config?: InputMaybe<ThreadConfig>;
+  source: ChatSource;
 };
 
 
@@ -422,11 +547,6 @@ export type MutationDeleteAgentPersonalityTraitArgs = {
 };
 
 
-export type MutationDeleteAspectArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
 export type MutationDeleteAudienceArgs = {
   id: Scalars['ID']['input'];
 };
@@ -439,11 +559,6 @@ export type MutationDeleteAuthTokenArgs = {
 
 
 export type MutationDeleteDeveloperArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDeleteDimensionArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -498,16 +613,15 @@ export type MutationImportElizaAgentArgs = {
 };
 
 
+export type MutationOpenChatArgs = {
+  source: ChatSource;
+};
+
+
 export type MutationUpdateAgentArgs = {
   developerId: Scalars['ID']['input'];
   id: Scalars['ID']['input'];
   input: UpdateAgentInput;
-};
-
-
-export type MutationUpdateAspectArgs = {
-  id: Scalars['ID']['input'];
-  input: UpdateAspectInput;
 };
 
 
@@ -521,12 +635,6 @@ export type MutationUpdateAuthTokenArgs = {
   developerId: Scalars['ID']['input'];
   id: Scalars['ID']['input'];
   input: UpdateAuthTokenInput;
-};
-
-
-export type MutationUpdateDimensionArgs = {
-  id: Scalars['ID']['input'];
-  input: UpdateDimensionInput;
 };
 
 
@@ -573,6 +681,12 @@ export type PostExample = {
   updatedAt: Scalars['String']['output'];
 };
 
+export enum PrivacyLevel {
+  Private = 'private',
+  Protected = 'protected',
+  Public = 'public'
+}
+
 export type Query = {
   agent?: Maybe<Agent>;
   agentPersonalityTrait?: Maybe<AgentPersonalityTrait>;
@@ -588,7 +702,9 @@ export type Query = {
   developer?: Maybe<Developer>;
   dimension?: Maybe<Dimension>;
   dimensions: Array<Dimension>;
+  getCompletedBeeline?: Maybe<CompletedBeeline>;
   getLevelTwoTraits?: Maybe<Scalars['JSON']['output']>;
+  getThreadsBySource: Array<Thread>;
   group?: Maybe<Group>;
   groups: Array<Group>;
   messageExample?: Maybe<MessageExample>;
@@ -658,8 +774,18 @@ export type QueryDimensionArgs = {
 };
 
 
+export type QueryGetCompletedBeelineArgs = {
+  beelineId: Scalars['ID']['input'];
+};
+
+
 export type QueryGetLevelTwoTraitsArgs = {
   agentId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryGetThreadsBySourceArgs = {
+  source: ChatSource;
 };
 
 
@@ -713,6 +839,12 @@ export type Reward = {
   updatedAt: Scalars['String']['output'];
 };
 
+export enum Role {
+  Assistant = 'assistant',
+  System = 'system',
+  User = 'user'
+}
+
 export type SemanticKnowledge = {
   agentId: Scalars['ID']['output'];
   content: Scalars['String']['output'];
@@ -724,10 +856,98 @@ export type SemanticKnowledge = {
   updatedAt: Scalars['String']['output'];
 };
 
+export enum SenderType {
+  Agent = 'agent',
+  System = 'system',
+  User = 'user'
+}
+
 export enum SourceType {
   Audience = 'audience',
   Developer = 'developer',
   Panel = 'panel'
+}
+
+export type Thread = {
+  beelines?: Maybe<Array<Maybe<Beeline>>>;
+  createdAt: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  metadata?: Maybe<ThreadMetadata>;
+  name: Scalars['String']['output'];
+  organizationId: Scalars['ID']['output'];
+  settings?: Maybe<ThreadSetting>;
+  sourceId: Scalars['String']['output'];
+  sourceType: ChatSourceType;
+  stats?: Maybe<ThreadStats>;
+  status: ThreadStatus;
+  updatedAt: Scalars['String']['output'];
+};
+
+export type ThreadConfig = {
+  metadata?: InputMaybe<ThreadMetadataInput>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ThreadLite = {
+  createdAt: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  status: ThreadStatus;
+  updatedAt: Scalars['String']['output'];
+};
+
+export type ThreadMessage = {
+  beelineId?: Maybe<Scalars['ID']['output']>;
+  contentEmbedding?: Maybe<Scalars['JSON']['output']>;
+  contentText: Scalars['String']['output'];
+  contentTool?: Maybe<Scalars['JSON']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  inResponseToId?: Maybe<Scalars['ID']['output']>;
+  interactionId?: Maybe<Scalars['ID']['output']>;
+  metadata?: Maybe<Scalars['JSON']['output']>;
+  responseType?: Maybe<Scalars['String']['output']>;
+  role?: Maybe<Scalars['String']['output']>;
+  senderId?: Maybe<Scalars['ID']['output']>;
+  senderType?: Maybe<Scalars['String']['output']>;
+  threadId?: Maybe<Scalars['ID']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type ThreadMetadata = {
+  customData?: Maybe<Scalars['JSON']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  tags?: Maybe<Array<Scalars['String']['output']>>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type ThreadMetadataInput = {
+  customData?: InputMaybe<Scalars['JSON']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ThreadSetting = {
+  contextWindow?: Maybe<Scalars['Int']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  maxMessages?: Maybe<Scalars['Int']['output']>;
+  privacyLevel?: Maybe<PrivacyLevel>;
+  retentionPeriod?: Maybe<Scalars['Int']['output']>;
+  threadId: Scalars['ID']['output'];
+  updatedAt?: Maybe<Scalars['String']['output']>;
+};
+
+export type ThreadStats = {
+  lastActivity?: Maybe<Scalars['String']['output']>;
+  messageCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export enum ThreadStatus {
+  Active = 'active',
+  Archived = 'archived',
+  Completed = 'completed',
+  Paused = 'paused'
 }
 
 export type Trait = {
@@ -833,6 +1053,26 @@ export type MessageExampleFieldsFragment = { id: string, agentId: string, conten
 export type AgentPersonalityTraitFieldsFragment = { id: string, agentId: string, dimensionId?: string | null, aspectId?: string | null, traitId?: string | null, systemWeight: number, relativeWeight: number, confidence: number, isCoreTrait: boolean, observationCount: number, lastObservedAt: string, metadata?: any | null, createdAt: string, updatedAt: string };
 
 export type AudienceFieldsFragment = { id: string, name: string, description?: string | null, apiKeyId?: string | null, pricingModel?: any | null, metadata?: any | null, createdAt: string, updatedAt: string };
+
+export type ThreadLiteFieldsFragment = { id: string, name: string, status: ThreadStatus, createdAt: string, updatedAt: string };
+
+export type ThreadMetadataFieldsFragment = { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null };
+
+export type ThreadSettingFieldsFragment = { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null };
+
+export type ThreadStatsFieldsFragment = { messageCount?: number | null, lastActivity?: string | null };
+
+export type ThreadMessageFieldsFragment = { id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null };
+
+export type ThreadFieldsFragment = { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null };
+
+export type LatestThreadFieldsFragment = { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> };
+
+export type ChatFieldsFragment = { threads: Array<{ id: string, name: string, status: ThreadStatus, createdAt: string, updatedAt: string }>, latestThread: { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> } };
+
+export type BeelineResponseFieldsFragment = { agentId: string, response: any };
+
+export type CompletedBeelineFieldsFragment = { status: BeelineStatus, summary?: string | null, responses?: Array<{ agentId: string, response: any } | null> | null };
 
 export type GroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -987,6 +1227,20 @@ export type AudienceQueryVariables = Exact<{
 
 export type AudienceQuery = { audience?: { id: string, name: string, description?: string | null, apiKeyId?: string | null, pricingModel?: any | null, metadata?: any | null, createdAt: string, updatedAt: string } | null };
 
+export type GetCompletedBeelineQueryVariables = Exact<{
+  beelineId: Scalars['ID']['input'];
+}>;
+
+
+export type GetCompletedBeelineQuery = { getCompletedBeeline?: { status: BeelineStatus, summary?: string | null, responses?: Array<{ agentId: string, response: any } | null> | null } | null };
+
+export type GetThreadsBySourceQueryVariables = Exact<{
+  source: ChatSource;
+}>;
+
+
+export type GetThreadsBySourceQuery = { getThreadsBySource: Array<{ id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null }> };
+
 export type CreateGroupMutationVariables = Exact<{
   input: CreateGroupInput;
 }>;
@@ -1061,21 +1315,7 @@ export type CreateAgentMutationVariables = Exact<{
 }>;
 
 
-export type CreateAgentMutation = { 
-  createAgent: { 
-    id: string, 
-    developerId: string, 
-    name: string, 
-    createdAt: string, 
-    updatedAt: string, 
-    audienceMembershipCount?: number | null, 
-    panelMembershipCount?: number | null, 
-    groupMembershipCount?: number | null, 
-    characterData?: { id: string, agentId: string, bio: string, lore?: string | null, adjectives: Array<string>, createdAt: string, updatedAt: string } | null, 
-    config?: { id: string, agentId: string, apis: any, preferences: any, createdAt: string, updatedAt: string } | null, 
-    rewardsGiven?: Array<{ id: string, amount: number, txHash?: string | null, createdAt: string, updatedAt: string } | null> | null 
-  } 
-};
+export type CreateAgentMutation = { createAgent: { id: string, developerId: string, name: string, createdAt: string, updatedAt: string, audienceMembershipCount?: number | null, panelMembershipCount?: number | null, groupMembershipCount?: number | null, characterData?: { id: string, agentId: string, bio: string, lore?: string | null, adjectives: Array<string>, createdAt: string, updatedAt: string } | null, config?: { id: string, agentId: string, apis: any, preferences: any, createdAt: string, updatedAt: string } | null, rewardsGiven?: Array<{ id: string, amount: number, txHash?: string | null, createdAt: string, updatedAt: string } | null> | null } };
 
 export type UpdateAgentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -1118,50 +1358,6 @@ export type DeleteSemanticKnowledgeMutationVariables = Exact<{
 
 
 export type DeleteSemanticKnowledgeMutation = { deleteSemanticKnowledge: boolean };
-
-export type CreateDimensionMutationVariables = Exact<{
-  input: CreateDimensionInput;
-}>;
-
-
-export type CreateDimensionMutation = { createDimension: { id: string, name: string, description: string, handle: string, metadata?: any | null, createdAt: string, updatedAt: string } };
-
-export type UpdateDimensionMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  input: UpdateDimensionInput;
-}>;
-
-
-export type UpdateDimensionMutation = { updateDimension: boolean };
-
-export type DeleteDimensionMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type DeleteDimensionMutation = { deleteDimension: boolean };
-
-export type CreateAspectMutationVariables = Exact<{
-  input: CreateAspectInput;
-}>;
-
-
-export type CreateAspectMutation = { createAspect: { id: string, dimensionId: string, name: string, description: string, handle: string, metadata?: any | null, createdAt: string, updatedAt: string } };
-
-export type UpdateAspectMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  input: UpdateAspectInput;
-}>;
-
-
-export type UpdateAspectMutation = { updateAspect: boolean };
-
-export type DeleteAspectMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type DeleteAspectMutation = { deleteAspect: boolean };
 
 export type CreateTraitMutationVariables = Exact<{
   input: CreateTraitInput;
@@ -1311,6 +1507,29 @@ export type GenerateAudienceMutationVariables = Exact<{
 
 
 export type GenerateAudienceMutation = { generateAudience: { id: string, name: string, description?: string | null, apiKeyId?: string | null, pricingModel?: any | null, metadata?: any | null, createdAt: string, updatedAt: string } };
+
+export type OpenChatMutationVariables = Exact<{
+  source: ChatSource;
+}>;
+
+
+export type OpenChatMutation = { openChat: { threads: Array<{ id: string, name: string, status: ThreadStatus, createdAt: string, updatedAt: string }>, latestThread: { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> } } };
+
+export type CreateBeelineMutationVariables = Exact<{
+  threadId: Scalars['ID']['input'];
+  input: CreateBeelineInput;
+}>;
+
+
+export type CreateBeelineMutation = { createBeeline: string };
+
+export type CreateThreadMutationVariables = Exact<{
+  source: ChatSource;
+  config?: InputMaybe<ThreadConfig>;
+}>;
+
+
+export type CreateThreadMutation = { createThread: string };
 
 export const GroupFieldsFragmentDoc = gql`
     fragment GroupFields on Group {
@@ -1483,6 +1702,151 @@ export const AudienceFieldsFragmentDoc = gql`
   updatedAt
 }
     `;
+export const ThreadMetadataFieldsFragmentDoc = gql`
+    fragment ThreadMetadataFields on ThreadMetadata {
+  title
+  description
+  tags
+  customData
+}
+    `;
+export const ThreadSettingFieldsFragmentDoc = gql`
+    fragment ThreadSettingFields on ThreadSetting {
+  threadId
+  retentionPeriod
+  maxMessages
+  privacyLevel
+  contextWindow
+  createdAt
+  updatedAt
+}
+    `;
+export const ThreadStatsFieldsFragmentDoc = gql`
+    fragment ThreadStatsFields on ThreadStats {
+  messageCount
+  lastActivity
+}
+    `;
+export const ThreadFieldsFragmentDoc = gql`
+    fragment ThreadFields on Thread {
+  id
+  name
+  status
+  sourceType
+  sourceId
+  metadata {
+    ...ThreadMetadataFields
+  }
+  createdAt
+  updatedAt
+  organizationId
+  beelines {
+    id
+    threadId
+    threadMessageId
+    targetType
+    targetId
+    status
+    summarizationPrompt
+    cohorts
+    cohortSummary
+    errorDetails
+    createdAt
+    updatedAt
+    organizationId
+  }
+  settings {
+    ...ThreadSettingFields
+  }
+  stats {
+    ...ThreadStatsFields
+  }
+}
+    ${ThreadMetadataFieldsFragmentDoc}
+${ThreadSettingFieldsFragmentDoc}
+${ThreadStatsFieldsFragmentDoc}`;
+export const ThreadLiteFieldsFragmentDoc = gql`
+    fragment ThreadLiteFields on ThreadLite {
+  id
+  name
+  status
+  createdAt
+  updatedAt
+}
+    `;
+export const ThreadMessageFieldsFragmentDoc = gql`
+    fragment ThreadMessageFields on ThreadMessage {
+  id
+  threadId
+  senderType
+  senderId
+  role
+  contentText
+  contentTool
+  inResponseToId
+  responseType
+  interactionId
+  beelineId
+  metadata
+  createdAt
+  updatedAt
+  contentEmbedding
+}
+    `;
+export const LatestThreadFieldsFragmentDoc = gql`
+    fragment LatestThreadFields on LatestThread {
+  id
+  name
+  status
+  sourceType
+  sourceId
+  metadata {
+    ...ThreadMetadataFields
+  }
+  createdAt
+  updatedAt
+  organizationId
+  settings {
+    ...ThreadSettingFields
+  }
+  stats {
+    ...ThreadStatsFields
+  }
+  pendingBeeline
+  messages {
+    ...ThreadMessageFields
+  }
+}
+    ${ThreadMetadataFieldsFragmentDoc}
+${ThreadSettingFieldsFragmentDoc}
+${ThreadStatsFieldsFragmentDoc}
+${ThreadMessageFieldsFragmentDoc}`;
+export const ChatFieldsFragmentDoc = gql`
+    fragment ChatFields on Chat {
+  threads {
+    ...ThreadLiteFields
+  }
+  latestThread {
+    ...LatestThreadFields
+  }
+}
+    ${ThreadLiteFieldsFragmentDoc}
+${LatestThreadFieldsFragmentDoc}`;
+export const BeelineResponseFieldsFragmentDoc = gql`
+    fragment BeelineResponseFields on BeelineResponse {
+  agentId
+  response
+}
+    `;
+export const CompletedBeelineFieldsFragmentDoc = gql`
+    fragment CompletedBeelineFields on CompletedBeeline {
+  status
+  responses {
+    ...BeelineResponseFields
+  }
+  summary
+}
+    ${BeelineResponseFieldsFragmentDoc}`;
 export const GroupsDocument = gql`
     query groups {
   groups {
@@ -1641,6 +2005,20 @@ export const AudienceDocument = gql`
   }
 }
     ${AudienceFieldsFragmentDoc}`;
+export const GetCompletedBeelineDocument = gql`
+    query getCompletedBeeline($beelineId: ID!) {
+  getCompletedBeeline(beelineId: $beelineId) {
+    ...CompletedBeelineFields
+  }
+}
+    ${CompletedBeelineFieldsFragmentDoc}`;
+export const GetThreadsBySourceDocument = gql`
+    query getThreadsBySource($source: ChatSource!) {
+  getThreadsBySource(source: $source) {
+    ...ThreadFields
+  }
+}
+    ${ThreadFieldsFragmentDoc}`;
 export const CreateGroupDocument = gql`
     mutation createGroup($input: CreateGroupInput!) {
   createGroup(input: $input) {
@@ -1730,40 +2108,6 @@ export const UpdateSemanticKnowledgeDocument = gql`
 export const DeleteSemanticKnowledgeDocument = gql`
     mutation deleteSemanticKnowledge($agentId: ID!, $id: ID!) {
   deleteSemanticKnowledge(agentId: $agentId, id: $id)
-}
-    `;
-export const CreateDimensionDocument = gql`
-    mutation createDimension($input: CreateDimensionInput!) {
-  createDimension(input: $input) {
-    ...DimensionFields
-  }
-}
-    ${DimensionFieldsFragmentDoc}`;
-export const UpdateDimensionDocument = gql`
-    mutation updateDimension($id: ID!, $input: UpdateDimensionInput!) {
-  updateDimension(id: $id, input: $input)
-}
-    `;
-export const DeleteDimensionDocument = gql`
-    mutation deleteDimension($id: ID!) {
-  deleteDimension(id: $id)
-}
-    `;
-export const CreateAspectDocument = gql`
-    mutation createAspect($input: CreateAspectInput!) {
-  createAspect(input: $input) {
-    ...AspectFields
-  }
-}
-    ${AspectFieldsFragmentDoc}`;
-export const UpdateAspectDocument = gql`
-    mutation updateAspect($id: ID!, $input: UpdateAspectInput!) {
-  updateAspect(id: $id, input: $input)
-}
-    `;
-export const DeleteAspectDocument = gql`
-    mutation deleteAspect($id: ID!) {
-  deleteAspect(id: $id)
 }
     `;
 export const CreateTraitDocument = gql`
@@ -1885,6 +2229,23 @@ export const GenerateAudienceDocument = gql`
   }
 }
     ${AudienceFieldsFragmentDoc}`;
+export const OpenChatDocument = gql`
+    mutation openChat($source: ChatSource!) {
+  openChat(source: $source) {
+    ...ChatFields
+  }
+}
+    ${ChatFieldsFragmentDoc}`;
+export const CreateBeelineDocument = gql`
+    mutation createBeeline($threadId: ID!, $input: CreateBeelineInput!) {
+  createBeeline(threadId: $threadId, input: $input)
+}
+    `;
+export const CreateThreadDocument = gql`
+    mutation createThread($source: ChatSource!, $config: ThreadConfig) {
+  createThread(source: $source, config: $config)
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -1912,6 +2273,8 @@ const AgentPersonalityTraitDocumentString = print(AgentPersonalityTraitDocument)
 const AgentPersonalityTraitsDocumentString = print(AgentPersonalityTraitsDocument);
 const AudiencesDocumentString = print(AudiencesDocument);
 const AudienceDocumentString = print(AudienceDocument);
+const GetCompletedBeelineDocumentString = print(GetCompletedBeelineDocument);
+const GetThreadsBySourceDocumentString = print(GetThreadsBySourceDocument);
 const CreateGroupDocumentString = print(CreateGroupDocument);
 const UpdateGroupDocumentString = print(UpdateGroupDocument);
 const DeleteGroupDocumentString = print(DeleteGroupDocument);
@@ -1927,12 +2290,6 @@ const DeleteAgentDocumentString = print(DeleteAgentDocument);
 const AddSemanticKnowledgeDocumentString = print(AddSemanticKnowledgeDocument);
 const UpdateSemanticKnowledgeDocumentString = print(UpdateSemanticKnowledgeDocument);
 const DeleteSemanticKnowledgeDocumentString = print(DeleteSemanticKnowledgeDocument);
-const CreateDimensionDocumentString = print(CreateDimensionDocument);
-const UpdateDimensionDocumentString = print(UpdateDimensionDocument);
-const DeleteDimensionDocumentString = print(DeleteDimensionDocument);
-const CreateAspectDocumentString = print(CreateAspectDocument);
-const UpdateAspectDocumentString = print(UpdateAspectDocument);
-const DeleteAspectDocumentString = print(DeleteAspectDocument);
 const CreateTraitDocumentString = print(CreateTraitDocument);
 const UpdateTraitDocumentString = print(UpdateTraitDocument);
 const DeleteTraitDocumentString = print(DeleteTraitDocument);
@@ -1952,6 +2309,9 @@ const GenerateAgentsDocumentString = print(GenerateAgentsDocument);
 const ImportElizaAgentDocumentString = print(ImportElizaAgentDocument);
 const AddToAudienceDocumentString = print(AddToAudienceDocument);
 const GenerateAudienceDocumentString = print(GenerateAudienceDocument);
+const OpenChatDocumentString = print(OpenChatDocument);
+const CreateBeelineDocumentString = print(CreateBeelineDocument);
+const CreateThreadDocumentString = print(CreateThreadDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     groups(variables?: GroupsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GroupsQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
@@ -2020,6 +2380,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     audience(variables: AudienceQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: AudienceQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<AudienceQuery>(AudienceDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'audience', 'query', variables);
     },
+    getCompletedBeeline(variables: GetCompletedBeelineQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetCompletedBeelineQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetCompletedBeelineQuery>(GetCompletedBeelineDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getCompletedBeeline', 'query', variables);
+    },
+    getThreadsBySource(variables: GetThreadsBySourceQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetThreadsBySourceQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetThreadsBySourceQuery>(GetThreadsBySourceDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getThreadsBySource', 'query', variables);
+    },
     createGroup(variables: CreateGroupMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: CreateGroupMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateGroupMutation>(CreateGroupDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createGroup', 'mutation', variables);
     },
@@ -2064,24 +2430,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     deleteSemanticKnowledge(variables: DeleteSemanticKnowledgeMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: DeleteSemanticKnowledgeMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteSemanticKnowledgeMutation>(DeleteSemanticKnowledgeDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteSemanticKnowledge', 'mutation', variables);
-    },
-    createDimension(variables: CreateDimensionMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: CreateDimensionMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateDimensionMutation>(CreateDimensionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createDimension', 'mutation', variables);
-    },
-    updateDimension(variables: UpdateDimensionMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: UpdateDimensionMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<UpdateDimensionMutation>(UpdateDimensionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateDimension', 'mutation', variables);
-    },
-    deleteDimension(variables: DeleteDimensionMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: DeleteDimensionMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteDimensionMutation>(DeleteDimensionDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteDimension', 'mutation', variables);
-    },
-    createAspect(variables: CreateAspectMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: CreateAspectMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateAspectMutation>(CreateAspectDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createAspect', 'mutation', variables);
-    },
-    updateAspect(variables: UpdateAspectMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: UpdateAspectMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<UpdateAspectMutation>(UpdateAspectDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateAspect', 'mutation', variables);
-    },
-    deleteAspect(variables: DeleteAspectMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: DeleteAspectMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<DeleteAspectMutation>(DeleteAspectDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteAspect', 'mutation', variables);
     },
     createTrait(variables: CreateTraitMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: CreateTraitMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateTraitMutation>(CreateTraitDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTrait', 'mutation', variables);
@@ -2139,6 +2487,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     generateAudience(variables: GenerateAudienceMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GenerateAudienceMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GenerateAudienceMutation>(GenerateAudienceDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'generateAudience', 'mutation', variables);
+    },
+    openChat(variables: OpenChatMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: OpenChatMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<OpenChatMutation>(OpenChatDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'openChat', 'mutation', variables);
+    },
+    createBeeline(variables: CreateBeelineMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: CreateBeelineMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateBeelineMutation>(CreateBeelineDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createBeeline', 'mutation', variables);
+    },
+    createThread(variables: CreateThreadMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: CreateThreadMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateThreadMutation>(CreateThreadDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createThread', 'mutation', variables);
     }
   };
 }

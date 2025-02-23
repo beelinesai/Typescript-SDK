@@ -10,9 +10,22 @@ import { Personality } from './collections/Personality';
 import { Dimensions } from './collections/Dimensions';
 import { Audiences } from './collections/Audiences';
 import { Aspects } from './collections/Aspects';
+import { Chat } from './collections/Chat';
 
 // Types
 export type * from './__generated__/index';
+export {
+  AvailableModels,
+  BeelineStatus,
+  ChatSourceType,
+  GroupStatus,
+  PrivacyLevel,
+  Role,
+  SenderType,
+  SourceType,
+  ThreadStatus,
+} from './__generated__/index';
+
 
 export class Beelines {
   private client: GraphQLClient;
@@ -24,7 +37,7 @@ export class Beelines {
   public readonly dimensions: Dimensions;
   public readonly audiences: Audiences;
   public readonly aspects: Aspects;
-
+  public readonly chat: Chat;
   constructor(config: { endpoint: string, apiKey: string }) {
     this.client = new GraphQLClient(config.endpoint);
     this.client.setHeader('Authorization', `Bearer ${config.apiKey}`);
@@ -39,6 +52,7 @@ export class Beelines {
     this.dimensions = new Dimensions(this.sdk);
     this.audiences = new Audiences(this.sdk);
     this.aspects = new Aspects(this.sdk);
+    this.chat = new Chat(this.sdk);
   }
 
   // This method wraps each function in the sdk and ensures it returns result data directly, or throws

@@ -161,6 +161,136 @@ fragment AudienceFields on Audience {
   updatedAt
 }
 
+# Add new fragments after the existing fragments
+fragment ThreadLiteFields on ThreadLite {
+  id
+  name
+  status
+  createdAt
+  updatedAt
+}
+
+fragment ThreadMetadataFields on ThreadMetadata {
+  title
+  description
+  tags
+  customData
+}
+
+fragment ThreadSettingFields on ThreadSetting {
+  threadId
+  retentionPeriod
+  maxMessages
+  privacyLevel
+  contextWindow
+  createdAt
+  updatedAt
+}
+
+fragment ThreadStatsFields on ThreadStats {
+  messageCount
+  lastActivity
+}
+
+fragment ThreadMessageFields on ThreadMessage {
+  id
+  threadId
+  senderType
+  senderId
+  role
+  contentText
+  contentTool
+  inResponseToId
+  responseType
+  interactionId
+  beelineId
+  metadata
+  createdAt
+  updatedAt
+  contentEmbedding
+}
+
+fragment ThreadFields on Thread {
+  id
+  name
+  status
+  sourceType
+  sourceId
+  metadata {
+    ...ThreadMetadataFields
+  }
+  createdAt
+  updatedAt
+  organizationId
+  beelines {
+    id
+    threadId
+    threadMessageId
+    targetType
+    targetId
+    status
+    summarizationPrompt
+    cohorts
+    cohortSummary
+    errorDetails
+    createdAt
+    updatedAt
+    organizationId
+  }
+  settings {
+    ...ThreadSettingFields
+  }
+  stats {
+    ...ThreadStatsFields
+  }
+}
+
+fragment LatestThreadFields on LatestThread {
+  id
+  name
+  status
+  sourceType
+  sourceId
+  metadata {
+    ...ThreadMetadataFields
+  }
+  createdAt
+  updatedAt
+  organizationId
+  settings {
+    ...ThreadSettingFields
+  }
+  stats {
+    ...ThreadStatsFields
+  }
+  pendingBeeline
+  messages {
+    ...ThreadMessageFields
+  }
+}
+
+fragment ChatFields on Chat {
+  threads {
+    ...ThreadLiteFields
+  }
+  latestThread {
+    ...LatestThreadFields
+  }
+}
+
+fragment BeelineResponseFields on BeelineResponse {
+  agentId
+  response
+}
+
+fragment CompletedBeelineFields on CompletedBeeline {
+  status
+  responses {
+    ...BeelineResponseFields
+  }
+  summary
+}
+
 #######################
 # Query Operations   #
 #######################
@@ -309,6 +439,19 @@ query audience($id: ID!) {
   }
 }
 
+# Add new queries after the existing queries
+query getCompletedBeeline($beelineId: ID!) {
+  getCompletedBeeline(beelineId: $beelineId) {
+    ...CompletedBeelineFields
+  }
+}
+
+query getThreadsBySource($source: ChatSource!) {
+  getThreadsBySource(source: $source) {
+    ...ThreadFields
+  }
+}
+
 #######################
 # Mutation Operations #
 #######################
@@ -351,7 +494,11 @@ mutation createAuthToken($developerId: ID!, $input: CreateAuthTokenInput!) {
   }
 }
 
-mutation updateAuthToken($id: ID!, $developerId: ID!, $input: UpdateAuthTokenInput!) {
+mutation updateAuthToken(
+  $id: ID!
+  $developerId: ID!
+  $input: UpdateAuthTokenInput!
+) {
   updateAuthToken(id: $id, developerId: $developerId, input: $input) {
     ...AuthTokenFields
   }
@@ -377,13 +524,20 @@ mutation deleteAgent($id: ID!, $developerId: ID!) {
 }
 
 # Knowledge Mutations
-mutation addSemanticKnowledge($agentId: ID!, $items: [AddSemanticKnowledgeInput!]!) {
+mutation addSemanticKnowledge(
+  $agentId: ID!
+  $items: [AddSemanticKnowledgeInput!]!
+) {
   addSemanticKnowledge(agentId: $agentId, items: $items) {
     ...SemanticKnowledgeFields
   }
 }
 
-mutation updateSemanticKnowledge($agentId: ID!, $id: ID!, $input: UpdateSemanticKnowledgeInput!) {
+mutation updateSemanticKnowledge(
+  $agentId: ID!
+  $id: ID!
+  $input: UpdateSemanticKnowledgeInput!
+) {
   updateSemanticKnowledge(agentId: $agentId, id: $id, input: $input) {
     ...SemanticKnowledgeFields
   }
@@ -394,34 +548,6 @@ mutation deleteSemanticKnowledge($agentId: ID!, $id: ID!) {
 }
 
 # Personality System Mutations
-mutation createDimension($input: CreateDimensionInput!) {
-  createDimension(input: $input) {
-    ...DimensionFields
-  }
-}
-
-mutation updateDimension($id: ID!, $input: UpdateDimensionInput!) {
-  updateDimension(id: $id, input: $input)
-}
-
-mutation deleteDimension($id: ID!) {
-  deleteDimension(id: $id)
-}
-
-mutation createAspect($input: CreateAspectInput!) {
-  createAspect(input: $input) {
-    ...AspectFields
-  }
-}
-
-mutation updateAspect($id: ID!, $input: UpdateAspectInput!) {
-  updateAspect(id: $id, input: $input)
-}
-
-mutation deleteAspect($id: ID!) {
-  deleteAspect(id: $id)
-}
-
 mutation createTrait($input: CreateTraitInput!) {
   createTrait(input: $input) {
     ...TraitFields
@@ -443,7 +569,11 @@ mutation addPostExamples($agentId: ID!, $items: [AddPostExampleInput!]!) {
   }
 }
 
-mutation updatePostExample($agentId: ID!, $id: ID!, $input: UpdatePostExampleInput!) {
+mutation updatePostExample(
+  $agentId: ID!
+  $id: ID!
+  $input: UpdatePostExampleInput!
+) {
   updatePostExample(agentId: $agentId, id: $id, input: $input) {
     ...PostExampleFields
   }
@@ -460,7 +590,11 @@ mutation addMessageExamples($agentId: ID!, $items: [AddMessageExampleInput!]!) {
   }
 }
 
-mutation updateMessageExample($agentId: ID!, $id: ID!, $input: UpdateMessageExampleInput!) {
+mutation updateMessageExample(
+  $agentId: ID!
+  $id: ID!
+  $input: UpdateMessageExampleInput!
+) {
   updateMessageExample(agentId: $agentId, id: $id, input: $input) {
     ...MessageExampleFields
   }
@@ -471,7 +605,10 @@ mutation deleteMessageExample($agentId: ID!, $id: ID!) {
 }
 
 # Agent Personality Traits Mutations
-mutation createAgentPersonalityTrait($agentId: ID!, $input: CreateAgentPersonalityTraitInput!) {
+mutation createAgentPersonalityTrait(
+  $agentId: ID!
+  $input: CreateAgentPersonalityTraitInput!
+) {
   createAgentPersonalityTrait(agentId: $agentId, input: $input) {
     ...AgentPersonalityTraitFields
   }
@@ -481,7 +618,10 @@ mutation deleteAgentPersonalityTrait($agentId: ID!, $id: ID!) {
   deleteAgentPersonalityTrait(agentId: $id, id: $id)
 }
 
-mutation createTraitAndAddToAgentPersonality($agentId: ID!, $input: CreateTraitInput!) {
+mutation createTraitAndAddToAgentPersonality(
+  $agentId: ID!
+  $input: CreateTraitInput!
+) {
   createTraitAndAddToAgentPersonality(agentId: $agentId, input: $input) {
     ...AgentPersonalityTraitFields
   }
@@ -526,4 +666,19 @@ mutation generateAudience($input: GenerateAudienceInput!) {
   generateAudience(input: $input) {
     ...AudienceFields
   }
-} 
+}
+
+# Add new mutations after the existing mutations
+mutation openChat($source: ChatSource!) {
+  openChat(source: $source) {
+    ...ChatFields
+  }
+}
+
+mutation createBeeline($threadId: ID!, $input: CreateBeelineInput!) {
+  createBeeline(threadId: $threadId, input: $input)
+}
+
+mutation createThread($source: ChatSource!, $config: ThreadConfig) {
+  createThread(source: $source, config: $config)
+}
