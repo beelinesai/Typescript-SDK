@@ -210,6 +210,39 @@ fragment ThreadMessageFields on ThreadMessage {
   contentEmbedding
 }
 
+fragment BeelineFields on Beeline {
+  id
+  threadId
+  threadMessageId
+  targetType
+  targetId
+  status
+  summarizationPrompt
+  cohorts
+  cohortSummary
+  errorDetails
+  createdAt
+  updatedAt
+  organizationId
+  responses {
+    ...BeelineResponseFields
+  }
+}
+
+fragment BeelineResponseFields on BeelineResponse {
+  agentId
+  agentName
+  response
+}
+
+fragment CompletedBeelineFields on CompletedBeeline {
+  status
+  responses {
+    ...BeelineResponseFields
+  }
+  summary
+}
+
 fragment ThreadFields on Thread {
   id
   name
@@ -223,19 +256,7 @@ fragment ThreadFields on Thread {
   updatedAt
   organizationId
   beelines {
-    id
-    threadId
-    threadMessageId
-    targetType
-    targetId
-    status
-    summarizationPrompt
-    cohorts
-    cohortSummary
-    errorDetails
-    createdAt
-    updatedAt
-    organizationId
+    ...BeelineFields
   }
   settings {
     ...ThreadSettingFields
@@ -257,6 +278,14 @@ fragment LatestThreadFields on LatestThread {
   createdAt
   updatedAt
   organizationId
+  source {
+    id
+    name
+    type
+  }
+  beelines {
+    ...BeelineFields
+  }
   settings {
     ...ThreadSettingFields
   }
@@ -264,6 +293,7 @@ fragment LatestThreadFields on LatestThread {
     ...ThreadStatsFields
   }
   pendingBeeline
+  pendingBeelineId
   messages {
     ...ThreadMessageFields
   }
@@ -276,19 +306,6 @@ fragment ChatFields on Chat {
   latestThread {
     ...LatestThreadFields
   }
-}
-
-fragment BeelineResponseFields on BeelineResponse {
-  agentId
-  response
-}
-
-fragment CompletedBeelineFields on CompletedBeeline {
-  status
-  responses {
-    ...BeelineResponseFields
-  }
-  summary
 }
 
 #######################
@@ -427,6 +444,12 @@ query agentPersonalityTraits($filters: AgentPersonalityTraitFiltersInput) {
 }
 
 # Audiences Queries
+query availableAudiences {
+  availableAudiences {
+    ...AudienceFields
+  }
+}
+
 query audiences {
   audiences {
     ...AudienceFields
@@ -448,7 +471,19 @@ query getCompletedBeeline($beelineId: ID!) {
 
 query getThreadsBySource($source: ChatSource!) {
   getThreadsBySource(source: $source) {
-    ...ThreadFields
+    ...LatestThreadFields
+  }
+}
+
+query getThreadById($threadId: ID!) {
+  getThreadById(threadId: $threadId) {
+    ...LatestThreadFields
+  }
+}
+
+query getRecentThreads {
+  getRecentThreads {
+    ...LatestThreadFields
   }
 }
 

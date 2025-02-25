@@ -8,6 +8,10 @@ export class Audiences {
     return await this.sdk.createAudience({ input });
   }
 
+  async available() {
+    return await this.sdk.availableAudiences();
+  }
+
   async byId(id: string) {
     return await this.sdk.audience({ id });
   }

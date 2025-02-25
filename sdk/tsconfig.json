@@ -9,9 +9,8 @@
     "strict": true,
     "moduleResolution": "node",
     "declaration": true,
-    "jsx": "react",
     "skipLibCheck": true,
-    "types": ["node", "react"]
+    "types": ["node"]
   },
   "include": ["src"]
 }

@@ -181,6 +181,7 @@ export type Beeline = {
   errorDetails?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   organizationId?: Maybe<Scalars['ID']['output']>;
+  responses?: Maybe<Array<Maybe<BeelineResponse>>>;
   status?: Maybe<BeelineStatus>;
   summarizationPrompt?: Maybe<Scalars['String']['output']>;
   targetId?: Maybe<Scalars['ID']['output']>;
@@ -192,7 +193,8 @@ export type Beeline = {
 
 export type BeelineResponse = {
   agentId: Scalars['ID']['output'];
-  response: Scalars['JSON']['output'];
+  agentName: Scalars['String']['output'];
+  response?: Maybe<Scalars['JSON']['output']>;
 };
 
 export enum BeelineStatus {
@@ -382,6 +384,7 @@ export enum GroupStatus {
 }
 
 export type LatestThread = {
+  beelines?: Maybe<Array<Maybe<Beeline>>>;
   createdAt: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   messages: Array<Maybe<ThreadMessage>>;
@@ -389,7 +392,9 @@ export type LatestThread = {
   name: Scalars['String']['output'];
   organizationId: Scalars['ID']['output'];
   pendingBeeline?: Maybe<Scalars['Boolean']['output']>;
+  pendingBeelineId?: Maybe<Scalars['ID']['output']>;
   settings?: Maybe<ThreadSetting>;
+  source?: Maybe<ThreadSource>;
   sourceId: Scalars['String']['output'];
   sourceType: ChatSourceType;
   stats?: Maybe<ThreadStats>;
@@ -699,12 +704,15 @@ export type Query = {
   audiences: Array<Audience>;
   authToken?: Maybe<AuthToken>;
   authTokens: Array<AuthToken>;
+  availableAudiences: Array<Audience>;
   developer?: Maybe<Developer>;
   dimension?: Maybe<Dimension>;
   dimensions: Array<Dimension>;
   getCompletedBeeline?: Maybe<CompletedBeeline>;
   getLevelTwoTraits?: Maybe<Scalars['JSON']['output']>;
-  getThreadsBySource: Array<Thread>;
+  getRecentThreads: Array<LatestThread>;
+  getThreadById: LatestThread;
+  getThreadsBySource: Array<LatestThread>;
   group?: Maybe<Group>;
   groups: Array<Group>;
   messageExample?: Maybe<MessageExample>;
@@ -781,6 +789,11 @@ export type QueryGetCompletedBeelineArgs = {
 
 export type QueryGetLevelTwoTraitsArgs = {
   agentId?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type QueryGetThreadByIdArgs = {
+  threadId: Scalars['ID']['input'];
 };
 
 
@@ -938,6 +951,12 @@ export type ThreadSetting = {
   updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
+export type ThreadSource = {
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  type: ChatSourceType;
+};
+
 export type ThreadStats = {
   lastActivity?: Maybe<Scalars['String']['output']>;
   messageCount?: Maybe<Scalars['Int']['output']>;
@@ -1064,15 +1083,17 @@ export type ThreadStatsFieldsFragment = { messageCount?: number | null, lastActi
 
 export type ThreadMessageFieldsFragment = { id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null };
 
-export type ThreadFieldsFragment = { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null };
+export type BeelineFieldsFragment = { id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null };
 
-export type LatestThreadFieldsFragment = { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> };
+export type BeelineResponseFieldsFragment = { agentId: string, agentName: string, response?: any | null };
 
-export type ChatFieldsFragment = { threads: Array<{ id: string, name: string, status: ThreadStatus, createdAt: string, updatedAt: string }>, latestThread: { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> } };
+export type CompletedBeelineFieldsFragment = { status: BeelineStatus, summary?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null };
 
-export type BeelineResponseFieldsFragment = { agentId: string, response: any };
+export type ThreadFieldsFragment = { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null };
 
-export type CompletedBeelineFieldsFragment = { status: BeelineStatus, summary?: string | null, responses?: Array<{ agentId: string, response: any } | null> | null };
+export type LatestThreadFieldsFragment = { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, pendingBeelineId?: string | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, source?: { id: string, name: string, type: ChatSourceType } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> };
+
+export type ChatFieldsFragment = { threads: Array<{ id: string, name: string, status: ThreadStatus, createdAt: string, updatedAt: string }>, latestThread: { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, pendingBeelineId?: string | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, source?: { id: string, name: string, type: ChatSourceType } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> } };
 
 export type GroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1215,6 +1236,11 @@ export type AgentPersonalityTraitsQueryVariables = Exact<{
 
 export type AgentPersonalityTraitsQuery = { agentPersonalityTraits: Array<{ id: string, agentId: string, dimensionId?: string | null, aspectId?: string | null, traitId?: string | null, systemWeight: number, relativeWeight: number, confidence: number, isCoreTrait: boolean, observationCount: number, lastObservedAt: string, metadata?: any | null, createdAt: string, updatedAt: string }> };
 
+export type AvailableAudiencesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AvailableAudiencesQuery = { availableAudiences: Array<{ id: string, name: string, description?: string | null, apiKeyId?: string | null, pricingModel?: any | null, metadata?: any | null, createdAt: string, updatedAt: string }> };
+
 export type AudiencesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1232,14 +1258,26 @@ export type GetCompletedBeelineQueryVariables = Exact<{
 }>;
 
 
-export type GetCompletedBeelineQuery = { getCompletedBeeline?: { status: BeelineStatus, summary?: string | null, responses?: Array<{ agentId: string, response: any } | null> | null } | null };
+export type GetCompletedBeelineQuery = { getCompletedBeeline?: { status: BeelineStatus, summary?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null } | null };
 
 export type GetThreadsBySourceQueryVariables = Exact<{
   source: ChatSource;
 }>;
 
 
-export type GetThreadsBySourceQuery = { getThreadsBySource: Array<{ id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null }> };
+export type GetThreadsBySourceQuery = { getThreadsBySource: Array<{ id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, pendingBeelineId?: string | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, source?: { id: string, name: string, type: ChatSourceType } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> }> };
+
+export type GetThreadByIdQueryVariables = Exact<{
+  threadId: Scalars['ID']['input'];
+}>;
+
+
+export type GetThreadByIdQuery = { getThreadById: { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, pendingBeelineId?: string | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, source?: { id: string, name: string, type: ChatSourceType } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> } };
+
+export type GetRecentThreadsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRecentThreadsQuery = { getRecentThreads: Array<{ id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, pendingBeelineId?: string | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, source?: { id: string, name: string, type: ChatSourceType } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> }> };
 
 export type CreateGroupMutationVariables = Exact<{
   input: CreateGroupInput;
@@ -1513,7 +1551,7 @@ export type OpenChatMutationVariables = Exact<{
 }>;
 
 
-export type OpenChatMutation = { openChat: { threads: Array<{ id: string, name: string, status: ThreadStatus, createdAt: string, updatedAt: string }>, latestThread: { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> } } };
+export type OpenChatMutation = { openChat: { threads: Array<{ id: string, name: string, status: ThreadStatus, createdAt: string, updatedAt: string }>, latestThread: { id: string, name: string, status: ThreadStatus, sourceType: ChatSourceType, sourceId: string, createdAt: string, updatedAt: string, organizationId: string, pendingBeeline?: boolean | null, pendingBeelineId?: string | null, metadata?: { title?: string | null, description?: string | null, tags?: Array<string> | null, customData?: any | null } | null, source?: { id: string, name: string, type: ChatSourceType } | null, beelines?: Array<{ id: string, threadId?: string | null, threadMessageId?: string | null, targetType?: string | null, targetId?: string | null, status?: BeelineStatus | null, summarizationPrompt?: string | null, cohorts?: any | null, cohortSummary?: string | null, errorDetails?: string | null, createdAt?: string | null, updatedAt?: string | null, organizationId?: string | null, responses?: Array<{ agentId: string, agentName: string, response?: any | null } | null> | null } | null> | null, settings?: { threadId: string, retentionPeriod?: number | null, maxMessages?: number | null, privacyLevel?: PrivacyLevel | null, contextWindow?: number | null, createdAt?: string | null, updatedAt?: string | null } | null, stats?: { messageCount?: number | null, lastActivity?: string | null } | null, messages: Array<{ id: string, threadId?: string | null, senderType?: string | null, senderId?: string | null, role?: string | null, contentText: string, contentTool?: any | null, inResponseToId?: string | null, responseType?: string | null, interactionId?: string | null, beelineId?: string | null, metadata?: any | null, createdAt?: string | null, updatedAt?: string | null, contentEmbedding?: any | null } | null> } } };
 
 export type CreateBeelineMutationVariables = Exact<{
   threadId: Scalars['ID']['input'];
@@ -1702,6 +1740,22 @@ export const AudienceFieldsFragmentDoc = gql`
   updatedAt
 }
     `;
+export const BeelineResponseFieldsFragmentDoc = gql`
+    fragment BeelineResponseFields on BeelineResponse {
+  agentId
+  agentName
+  response
+}
+    `;
+export const CompletedBeelineFieldsFragmentDoc = gql`
+    fragment CompletedBeelineFields on CompletedBeeline {
+  status
+  responses {
+    ...BeelineResponseFields
+  }
+  summary
+}
+    ${BeelineResponseFieldsFragmentDoc}`;
 export const ThreadMetadataFieldsFragmentDoc = gql`
     fragment ThreadMetadataFields on ThreadMetadata {
   title
@@ -1710,6 +1764,26 @@ export const ThreadMetadataFieldsFragmentDoc = gql`
   customData
 }
     `;
+export const BeelineFieldsFragmentDoc = gql`
+    fragment BeelineFields on Beeline {
+  id
+  threadId
+  threadMessageId
+  targetType
+  targetId
+  status
+  summarizationPrompt
+  cohorts
+  cohortSummary
+  errorDetails
+  createdAt
+  updatedAt
+  organizationId
+  responses {
+    ...BeelineResponseFields
+  }
+}
+    ${BeelineResponseFieldsFragmentDoc}`;
 export const ThreadSettingFieldsFragmentDoc = gql`
     fragment ThreadSettingFields on ThreadSetting {
   threadId
@@ -1741,19 +1815,7 @@ export const ThreadFieldsFragmentDoc = gql`
   updatedAt
   organizationId
   beelines {
-    id
-    threadId
-    threadMessageId
-    targetType
-    targetId
-    status
-    summarizationPrompt
-    cohorts
-    cohortSummary
-    errorDetails
-    createdAt
-    updatedAt
-    organizationId
+    ...BeelineFields
   }
   settings {
     ...ThreadSettingFields
@@ -1763,6 +1825,7 @@ export const ThreadFieldsFragmentDoc = gql`
   }
 }
     ${ThreadMetadataFieldsFragmentDoc}
+${BeelineFieldsFragmentDoc}
 ${ThreadSettingFieldsFragmentDoc}
 ${ThreadStatsFieldsFragmentDoc}`;
 export const ThreadLiteFieldsFragmentDoc = gql`
@@ -1806,6 +1869,14 @@ export const LatestThreadFieldsFragmentDoc = gql`
   createdAt
   updatedAt
   organizationId
+  source {
+    id
+    name
+    type
+  }
+  beelines {
+    ...BeelineFields
+  }
   settings {
     ...ThreadSettingFields
   }
@@ -1813,11 +1884,13 @@ export const LatestThreadFieldsFragmentDoc = gql`
     ...ThreadStatsFields
   }
   pendingBeeline
+  pendingBeelineId
   messages {
     ...ThreadMessageFields
   }
 }
     ${ThreadMetadataFieldsFragmentDoc}
+${BeelineFieldsFragmentDoc}
 ${ThreadSettingFieldsFragmentDoc}
 ${ThreadStatsFieldsFragmentDoc}
 ${ThreadMessageFieldsFragmentDoc}`;
@@ -1832,21 +1905,6 @@ export const ChatFieldsFragmentDoc = gql`
 }
     ${ThreadLiteFieldsFragmentDoc}
 ${LatestThreadFieldsFragmentDoc}`;
-export const BeelineResponseFieldsFragmentDoc = gql`
-    fragment BeelineResponseFields on BeelineResponse {
-  agentId
-  response
-}
-    `;
-export const CompletedBeelineFieldsFragmentDoc = gql`
-    fragment CompletedBeelineFields on CompletedBeeline {
-  status
-  responses {
-    ...BeelineResponseFields
-  }
-  summary
-}
-    ${BeelineResponseFieldsFragmentDoc}`;
 export const GroupsDocument = gql`
     query groups {
   groups {
@@ -1991,6 +2049,13 @@ export const AgentPersonalityTraitsDocument = gql`
   }
 }
     ${AgentPersonalityTraitFieldsFragmentDoc}`;
+export const AvailableAudiencesDocument = gql`
+    query availableAudiences {
+  availableAudiences {
+    ...AudienceFields
+  }
+}
+    ${AudienceFieldsFragmentDoc}`;
 export const AudiencesDocument = gql`
     query audiences {
   audiences {
@@ -2015,10 +2080,24 @@ export const GetCompletedBeelineDocument = gql`
 export const GetThreadsBySourceDocument = gql`
     query getThreadsBySource($source: ChatSource!) {
   getThreadsBySource(source: $source) {
-    ...ThreadFields
+    ...LatestThreadFields
   }
 }
-    ${ThreadFieldsFragmentDoc}`;
+    ${LatestThreadFieldsFragmentDoc}`;
+export const GetThreadByIdDocument = gql`
+    query getThreadById($threadId: ID!) {
+  getThreadById(threadId: $threadId) {
+    ...LatestThreadFields
+  }
+}
+    ${LatestThreadFieldsFragmentDoc}`;
+export const GetRecentThreadsDocument = gql`
+    query getRecentThreads {
+  getRecentThreads {
+    ...LatestThreadFields
+  }
+}
+    ${LatestThreadFieldsFragmentDoc}`;
 export const CreateGroupDocument = gql`
     mutation createGroup($input: CreateGroupInput!) {
   createGroup(input: $input) {
@@ -2271,10 +2350,13 @@ const MessageExamplesDocumentString = print(MessageExamplesDocument);
 const MessageExampleDocumentString = print(MessageExampleDocument);
 const AgentPersonalityTraitDocumentString = print(AgentPersonalityTraitDocument);
 const AgentPersonalityTraitsDocumentString = print(AgentPersonalityTraitsDocument);
+const AvailableAudiencesDocumentString = print(AvailableAudiencesDocument);
 const AudiencesDocumentString = print(AudiencesDocument);
 const AudienceDocumentString = print(AudienceDocument);
 const GetCompletedBeelineDocumentString = print(GetCompletedBeelineDocument);
 const GetThreadsBySourceDocumentString = print(GetThreadsBySourceDocument);
+const GetThreadByIdDocumentString = print(GetThreadByIdDocument);
+const GetRecentThreadsDocumentString = print(GetRecentThreadsDocument);
 const CreateGroupDocumentString = print(CreateGroupDocument);
 const UpdateGroupDocumentString = print(UpdateGroupDocument);
 const DeleteGroupDocumentString = print(DeleteGroupDocument);
@@ -2374,6 +2456,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     agentPersonalityTraits(variables?: AgentPersonalityTraitsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: AgentPersonalityTraitsQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<AgentPersonalityTraitsQuery>(AgentPersonalityTraitsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'agentPersonalityTraits', 'query', variables);
     },
+    availableAudiences(variables?: AvailableAudiencesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: AvailableAudiencesQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<AvailableAudiencesQuery>(AvailableAudiencesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'availableAudiences', 'query', variables);
+    },
     audiences(variables?: AudiencesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: AudiencesQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<AudiencesQuery>(AudiencesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'audiences', 'query', variables);
     },
@@ -2385,6 +2470,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getThreadsBySource(variables: GetThreadsBySourceQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetThreadsBySourceQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetThreadsBySourceQuery>(GetThreadsBySourceDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getThreadsBySource', 'query', variables);
+    },
+    getThreadById(variables: GetThreadByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetThreadByIdQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetThreadByIdQuery>(GetThreadByIdDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getThreadById', 'query', variables);
+    },
+    getRecentThreads(variables?: GetRecentThreadsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetRecentThreadsQuery; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetRecentThreadsQuery>(GetRecentThreadsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getRecentThreads', 'query', variables);
     },
     createGroup(variables: CreateGroupMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: CreateGroupMutation; errors?: GraphQLError[]; extensions?: any; headers: Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<CreateGroupMutation>(CreateGroupDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createGroup', 'mutation', variables);

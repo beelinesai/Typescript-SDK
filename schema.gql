@@ -43,6 +43,7 @@ type Query {
   agentPersonalityTraits(filters: AgentPersonalityTraitFiltersInput): [AgentPersonalityTrait!]!
 
   # Audiences
+  availableAudiences: [Audience!]!
   audiences: [Audience!]!
   audience(id: ID!): Audience
 
@@ -51,7 +52,9 @@ type Query {
 
   # Threads
   getCompletedBeeline(beelineId: ID!): CompletedBeeline
-  getThreadsBySource(source: ChatSource!): [Thread!]!
+  getThreadsBySource(source: ChatSource!): [LatestThread!]!
+  getThreadById(threadId: ID!): LatestThread!
+  getRecentThreads: [LatestThread!]!
 }
 
 type Mutation {
@@ -150,7 +153,8 @@ enum BeelineStatus {
 
 type BeelineResponse {  
   agentId: ID!
-  response: JSON!
+  agentName: String!
+  response: JSON
 }
 
 type Beeline {
@@ -167,6 +171,8 @@ type Beeline {
   createdAt: String
   updatedAt: String
   organizationId: ID
+
+  responses: [BeelineResponse]
 }
 
 type CompletedBeeline {
@@ -335,6 +341,12 @@ input ChatSource {
   sourceType: ChatSourceType!
 }
 
+type ThreadSource {
+  id: ID!
+  name: String!
+  type: ChatSourceType!
+}
+
 type LatestThread {
   id: ID!
   name: String!
@@ -346,9 +358,12 @@ type LatestThread {
   updatedAt: String!
   organizationId: ID!
   
+  source: ThreadSource
+  beelines: [Beeline]
   settings: ThreadSetting
   stats: ThreadStats
   pendingBeeline: Boolean
+  pendingBeelineId: ID
   messages: [ThreadMessage]!
 }
 
