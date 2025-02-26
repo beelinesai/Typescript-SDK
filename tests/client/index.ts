@@ -1,4 +1,4 @@
-import { Beelines } from "@beelines/sdk";
+import { Beelines } from "@beelinesai/sdk";
 
 const client = new Beelines({
   endpoint: "https://dev-api.beelines.ai/graphql",
