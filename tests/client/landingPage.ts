@@ -9,8 +9,8 @@ import {
 const US_PRESIDENTS_AUDIENCE_ID = "9961ca0a-f4fe-4699-96b0-05a39720cf32";
 
 const client = new Beelines({
-  endpoint: "https://api.beelines.ai/graphql",
-  apiKey: process.env.BEELINES_API_KEY!,
+  endpoint: Bun.env.BEELINES_API_ENDPOINT!,
+  apiKey: Bun.env.BEELINES_API_KEY!
 });
 
 const usPresidents = await client.audiences.byId(US_PRESIDENTS_AUDIENCE_ID);

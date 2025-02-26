@@ -1,6 +1,6 @@
 import type { Sdk, CreateAgentInput, UpdateAgentInput, GenerateAgentsInput } from '../__generated__/index';
 import { WrappedSdk } from '../types';
-import type { Character } from "@ai16z/eliza";
+import type { Character, CharacterConfig } from "@ai16z/eliza";
 
 
 export class Agents {
@@ -30,7 +30,7 @@ export class Agents {
     return await this.sdk.generateAgents({ developerId, input });
   }
 
-  async importEliza(developerId: string, input: Character) {
+  async importEliza(developerId: string, input: Character | CharacterConfig) {
     return await this.sdk.importElizaAgent({ developerId, input });
   }
 }

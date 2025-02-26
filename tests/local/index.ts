@@ -2,11 +2,11 @@ import { Beelines, BeelineStatus, ChatSourceType, SenderType, type Developer } f
 import sbfCharacter from "../sbf.character.json";
 
 const client = new Beelines({
-  endpoint: "https://dev-api.beelines.ai/graphql",
-  apiKey: "bk_0639a891df255b61183a40b9d7304637b3d2c226394494eea1e2537f7dc8f7ef"
+  endpoint: Bun.env.BEELINES_API_ENDPOINT!,
+  apiKey: Bun.env.BEELINES_API_KEY!
 });
 
-const developer: Developer = await client.developers.byEmail("chainstarters@beelines.ai");
+const developer: Developer = await client.developers.byEmail(Bun.env.BEELINES_EMAIL!);
 console.log('tests/local ~ developer', developer);
 
 try {
@@ -43,7 +43,8 @@ const agent = await client.agents.create(developer.id, {
 
 console.log('tests/local ~ agent', agent);
 
-const sbf = await client.agents.importEliza(developer.id, sbfCharacter as any); // ?? why is there own demo character not typed correctly?
+// TODO ask eliza why are their demo characters not matching their Character type?
+const sbf = await client.agents.importEliza(developer.id, sbfCharacter as any); 
 console.log('tests/local ~ sbf', sbf);
 
 const randoms = await client.agents.generate(developer.id, {
