@@ -14,12 +14,11 @@ async create(input: CreateAudienceInput): Promise<Audience>
 
 **Parameters:**
 ```typescript
-{
+const params: {
   input: CreateAudienceInput;   // Configuration for the new audience
 }
 
-// CreateAudienceInput
-{
+type CreateAudienceInput = {
   name: string;            // The name of the audience (required)
   description?: string;    // A description of the audience's purpose (optional)
   apiKeyId?: string;       // API key identifier for the audience (optional)
@@ -28,20 +27,7 @@ async create(input: CreateAudienceInput): Promise<Audience>
 }
 ```
 
-**Returns:**
-```typescript
-Audience {
-  id: string;               // Unique identifier for the audience
-  name: string;             // Name of the audience
-  description?: string;     // Description of the audience (optional)
-  apiKeyId?: string;        // API key identifier (optional)
-  pricingModel?: any;       // Pricing model configuration (optional)
-  metadata?: any;           // Additional metadata (optional)
-  createdAt: string;        // Creation timestamp
-  updatedAt: string;        // Last update timestamp
-  agents?: Agent[];         // Agents in this audience (optional)
-}
-```
+**Returns:** An [Audience](#audience)
 
 ### Get Available Audiences
 
@@ -51,15 +37,7 @@ Retrieves audiences that are available for use.
 async available(): Promise<Audience[]>
 ```
 
-**Parameters:**
-```typescript
-// No parameters
-```
-
-**Returns:**
-```typescript
-Audience[] // Array of available audience objects
-```
+**Returns:** An [Audience](#audience)[] of available audiences
 
 ### Get Audience by ID
 
@@ -76,12 +54,7 @@ async byId(id: string): Promise<Audience>
 }
 ```
 
-**Returns:**
-```typescript
-Audience {
-  // Same structure as create method
-}
-```
+**Returns:** An [Audience](#audience)
 
 ### List Audiences
 
@@ -91,15 +64,7 @@ Retrieves all audiences.
 async list(): Promise<Audience[]>
 ```
 
-**Parameters:**
-```typescript
-// No parameters
-```
-
-**Returns:**
-```typescript
-Audience[] // Array of audience objects
-```
+**Returns:** An [Audience](#audience)[]
 
 ### Update an Audience
 
@@ -172,12 +137,7 @@ async addTo(id: string, input: AddToAudienceInput): Promise<Audience>
 }
 ```
 
-**Returns:**
-```typescript
-Audience {
-  // Same structure as create method, with updated agents array
-}
-```
+**Returns:** An [Audience](#audience)
 
 ### Generate Audience
 
@@ -205,15 +165,11 @@ async generate(input: GenerateAudienceInput): Promise<Audience>
 }
 ```
 
-**Returns:**
-- `Audience`: The newly generated audience object with its agents
+**Returns:** A newly generated [Audience](#audience)
 
 ## Types
 
 ### Audience
-
-The representation of an audience in the Beelines platform.
-
 ```typescript
 type Audience = {
   id: string;
@@ -229,9 +185,6 @@ type Audience = {
 ```
 
 ### CreateAudienceInput
-
-Input for creating a new audience.
-
 ```typescript
 type CreateAudienceInput = {
   name: string;
@@ -243,9 +196,6 @@ type CreateAudienceInput = {
 ```
 
 ### UpdateAudienceInput
-
-Input for updating an existing audience.
-
 ```typescript
 type UpdateAudienceInput = {
   name?: string;
@@ -256,9 +206,6 @@ type UpdateAudienceInput = {
 ```
 
 ### AddToAudienceInput
-
-Input for adding agents to an audience.
-
 ```typescript
 type AddToAudienceInput = {
   prompt?: string;
@@ -267,9 +214,6 @@ type AddToAudienceInput = {
 ```
 
 ### GenerateAudienceInput
-
-Input for generating an audience with agents.
-
 ```typescript
 type GenerateAudienceInput = {
   name: string;
@@ -285,7 +229,6 @@ type GenerateAudienceInput = {
 ## Examples
 
 ### Creating a new audience
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
@@ -305,7 +248,6 @@ console.log(`Created audience: ${audience.id} - ${audience.name}`);
 ```
 
 ### Adding agents to an existing audience
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
@@ -322,7 +264,6 @@ console.log(`Total members: ${updatedAudience.memberCount}`);
 ```
 
 ### Generating an audience with agents
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
@@ -341,7 +282,6 @@ console.log(`Members: ${generatedAudience.memberCount}`);
 ```
 
 ### Listing all audiences
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",

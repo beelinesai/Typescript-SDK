@@ -22,31 +22,20 @@ async create(developerId: string, input: CreateAgentInput): Promise<Agent>
 // CreateAgentInput
 {
   name?: string;                // The name of the agent (optional)
-  characterData?: {             // Character information for the agent (optional)
-    bio: string;                // Biography of the agent
-    lore?: string;              // Background lore for the agent (optional)
-    adjectives?: string[];      // Descriptive terms for the agent's personality (optional)
-  };
+  characterData?: CharacterData // Character information for the agent (optional)
   audienceId?: string;          // ID of an audience to associate with this agent (optional)
+}
+
+// CharacterData
+{
+  bio: string;                  // Biography of the character
+  lore?: string;                // Background lore for the character (optional)
+  adjectives?: string[];        // Descriptive terms for the character's personality (optional)
 }
 ```
 
 **Returns:**
-```typescript
-Agent {
-  id: string;                   // Unique identifier for the agent
-  developerId: string;          // ID of the developer who owns this agent
-  name: string;                 // The agent's name
-  characterData: CharacterData; // Character information
-  config: AgentConfig;          // Configuration settings
-  createdAt: string;            // Creation timestamp
-  updatedAt: string;            // Last update timestamp
-  audienceMembershipCount: number; // Number of audiences the agent belongs to
-  panelMembershipCount: number; // Number of panels the agent belongs to
-  groupMembershipCount: number; // Number of groups the agent belongs to
-  rewardsGiven: Reward[];       // Rewards given to the agent
-}
-```
+An [Agent](#agent)
 
 ### Get Agent by ID
 
@@ -65,11 +54,7 @@ async byId(id: string, developerId: string): Promise<Agent>
 ```
 
 **Returns:**
-```typescript
-Agent {
-  // Same structure as create method
-}
-```
+An [Agent](#agent)
 
 ### List Agents
 
@@ -87,9 +72,8 @@ async list(developerId: string): Promise<Agent[]>
 ```
 
 **Returns:**
-```typescript
-Agent[] // Array of agent objects owned by the developer
-```
+[Agent](#agent)[] owned by the developer
+
 
 ### Update an Agent
 
@@ -150,8 +134,8 @@ async generate(developerId: string, input: GenerateAgentsInput): Promise<Agent[]
 **Parameters:**
 ```typescript
 {
-  developerId: string;           // The ID of the developer who will own the generated agents
-  input: GenerateAgentsInput;    // Configuration for agent generation
+  developerId: string;         // The ID of the developer who will own the generated agents
+  input: GenerateAgentsInput;  // Configuration for agent generation
 }
 
 // GenerateAgentsInput
@@ -161,9 +145,7 @@ async generate(developerId: string, input: GenerateAgentsInput): Promise<Agent[]
 ```
 
 **Returns:**
-```typescript
-Agent[] // Array of generated agent objects
-```
+generated [Agent](#agent)[]
 
 ### Import from Eliza
 
@@ -187,18 +169,11 @@ async importEliza(developerId: string, input: Character): Promise<Agent>
 ```
 
 **Returns:**
-```typescript
-Agent {
-  // Same structure as create method
-}
-```
+An [Agent](#agent)
 
 ## Types
 
 ### Agent
-
-The representation of an AI agent in the Beelines platform.
-
 ```typescript
 type Agent = {
   id: string;
@@ -237,9 +212,6 @@ type Agent = {
 ```
 
 ### CreateAgentInput
-
-Input for creating a new agent.
-
 ```typescript
 type CreateAgentInput = {
   name?: string;
@@ -253,9 +225,6 @@ type CreateAgentInput = {
 ```
 
 ### UpdateAgentInput
-
-Input for updating an existing agent.
-
 ```typescript
 type UpdateAgentInput = {
   name?: string;
@@ -263,9 +232,6 @@ type UpdateAgentInput = {
 ```
 
 ### GenerateAgentsInput
-
-Input for automatically generating agents.
-
 ```typescript
 type GenerateAgentsInput = {
   quantity?: number; // Default: 1
@@ -275,7 +241,6 @@ type GenerateAgentsInput = {
 ## Examples
 
 ### Creating a new agent
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
@@ -283,7 +248,7 @@ const beelines = new Beelines({
 });
 
 // First, get the developer ID
-const developer = await beelines.developers.getByEmail("user@example.com");
+const developer = await beelines.developers.byEmail("user@example.com");
 
 // Create a new agent
 const agent = await beelines.agents.create(developer.id, {
@@ -298,14 +263,13 @@ console.log(`Created agent: ${agent.id} - ${agent.name}`);
 ```
 
 ### Listing all agents
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
   apiKey: "your-api-key"
 });
 
-const developer = await beelines.developers.getByEmail("user@example.com");
+const developer = await beelines.developers.byEmail("user@example.com");
 const agents = await beelines.agents.list(developer.id);
 
 console.log(`Found ${agents.length} agents:`);
@@ -315,14 +279,13 @@ agents.forEach(agent => {
 ```
 
 ### Generating agents automatically
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
   apiKey: "your-api-key"
 });
 
-const developer = await beelines.developers.getByEmail("user@example.com");
+const developer = await beelines.developers.byEmail("user@example.com");
 const generatedAgents = await beelines.agents.generate(developer.id, {
   quantity: 3
 });

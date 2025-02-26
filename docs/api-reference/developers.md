@@ -19,17 +19,7 @@ async byId(id: string): Promise<Developer>
 }
 ```
 
-**Returns:**
-```typescript
-Developer {
-  id: string;           // Unique identifier for the developer
-  email: string;        // Email address of the developer
-  organizationId?: string;  // ID of the organization the developer belongs to (optional)
-  createdAt: string;    // Creation timestamp
-  updatedAt: string;    // Last update timestamp
-  authTokens?: AuthToken[]; // Array of authentication tokens (optional)
-}
-```
+**Returns:** A [Developer](#developer)
 
 ### Get Developer by Email
 
@@ -46,12 +36,7 @@ async byEmail(email: string): Promise<Developer>
 }
 ```
 
-**Returns:**
-```typescript
-Developer {
-  // Same structure as byId method
-}
-```
+**Returns:** A [Developer](#developer)
 
 ### Delete Developer
 
@@ -97,19 +82,7 @@ async createToken(developerId: string, input: CreateAuthTokenInput): Promise<Aut
 }
 ```
 
-**Returns:**
-```typescript
-AuthToken {
-  id: string;          // Unique identifier for the token
-  developerId: string; // ID of the developer who owns the token
-  token: string;       // The actual token string used for authentication
-  name?: string;       // Friendly name for the token (optional)
-  metadata?: any;      // Additional metadata (optional)
-  expiresAt?: string;  // Expiration timestamp (optional)
-  createdAt: string;   // Creation timestamp
-  updatedAt: string;   // Last update timestamp
-}
-```
+**Returns:** An [AuthToken](#authtoken)
 
 ### Update Auth Token
 
@@ -134,12 +107,7 @@ async updateToken(id: string, developerId: string, input: UpdateAuthTokenInput):
 }
 ```
 
-**Returns:**
-```typescript
-AuthToken {
-  // Same structure as createToken method
-}
-```
+**Returns:** An [AuthToken](#authtoken)
 
 ### Revoke Auth Token
 
@@ -177,10 +145,7 @@ async listTokens(developerId: string): Promise<AuthToken[]>
 }
 ```
 
-**Returns:**
-```typescript
-AuthToken[] // Array of authentication tokens
-```
+**Returns:** An [AuthToken](#authtoken)[]
 
 ### Get Auth Token
 
@@ -198,19 +163,11 @@ async getToken(token: string, developerId: string): Promise<AuthToken>
 }
 ```
 
-**Returns:**
-```typescript
-AuthToken {
-  // Same structure as createToken method
-}
-```
+**Returns:** An [AuthToken](#authtoken)
 
 ## Types
 
 ### Developer
-
-The representation of a developer account in the Beelines platform.
-
 ```typescript
 type Developer = {
   id: string;
@@ -224,7 +181,6 @@ type Developer = {
 ```
 
 ### AuthToken
-
 Represents an authentication token used to access the Beelines API.
 
 ```typescript
@@ -241,9 +197,6 @@ type AuthToken = {
 ```
 
 ### CreateAuthTokenInput
-
-Input for creating a new authentication token.
-
 ```typescript
 type CreateAuthTokenInput = {
   name?: string;
@@ -252,9 +205,6 @@ type CreateAuthTokenInput = {
 ```
 
 ### UpdateAuthTokenInput
-
-Input for updating an existing authentication token.
-
 ```typescript
 type UpdateAuthTokenInput = {
   name?: string;
@@ -265,7 +215,6 @@ type UpdateAuthTokenInput = {
 ## Examples
 
 ### Getting a developer by email
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
@@ -277,7 +226,6 @@ console.log(`Developer: ${developer.id} (${developer.email})`);
 ```
 
 ### Creating an authentication token
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
@@ -297,7 +245,6 @@ console.log(`New token created: ${token.token}`);
 ```
 
 ### Listing all tokens for a developer
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
@@ -314,7 +261,6 @@ tokens.forEach(token => {
 ```
 
 ### Revoking a token
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",

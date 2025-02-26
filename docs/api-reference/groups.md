@@ -23,22 +23,7 @@ async create(input: CreateGroupInput): Promise<Group>
   - `sourceId` (string, required): ID of the source entity for this group
   - `sourceType` (SourceType, required): Type of the source entity (audience, panel, or developer)
 
-**Returns:**
-```typescript
-Group {
-  id: string;             // Unique identifier for the group
-  sourceId: string;       // ID of the source entity for this group
-  sourceType: SourceType; // Type of the source entity
-  name?: string;          // Name of the group (optional)
-  prompt?: string;        // Prompt/instructions for the group (optional)
-  targetSize?: number;    // Target number of agents (optional)
-  status: string;         // Status of the group
-  metadata?: any;         // Additional metadata (optional)
-  createdAt: string;      // Creation timestamp
-  updatedAt: string;      // Last update timestamp
-  source?: any;           // Source entity reference (optional)
-}
-```
+**Returns:** A [Group](#group)
 
 ### Get Group by ID
 
@@ -51,12 +36,7 @@ async byId(id: string): Promise<Group>
 **Parameters:**
 - `id` (string): The ID of the group to retrieve
 
-**Returns:**
-```typescript
-Group {
-  // Same structure as create method
-}
-```
+**Returns:** A [Group](#group)
 
 ### List Groups
 
@@ -66,13 +46,7 @@ Retrieves all available groups.
 async list(): Promise<Group[]>
 ```
 
-**Parameters:**
-- None
-
-**Returns:**
-```typescript
-Group[] // Array of group objects
-```
+**Returns:** A [Group](#group)[]
 
 ### Update a Group
 
@@ -118,7 +92,7 @@ boolean // true if deletion was successful, false otherwise
 
 ### Group
 
-The representation of a group in the Beelines platform.
+A group of agents.
 
 ```typescript
 type Group = {
@@ -137,9 +111,6 @@ type Group = {
 ```
 
 ### CreateGroupInput
-
-Input for creating a new group.
-
 ```typescript
 type CreateGroupInput = {
   name?: string;
@@ -154,9 +125,6 @@ type CreateGroupInput = {
 ```
 
 ### UpdateGroupInput
-
-Input for updating an existing group.
-
 ```typescript
 type UpdateGroupInput = {
   name?: string;
@@ -197,7 +165,6 @@ enum GroupStatus {
 ## Examples
 
 ### Creating a new group
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
@@ -221,7 +188,6 @@ console.log(`Created group: ${group.id} - ${group.name}`);
 ```
 
 ### Updating a group's status
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",
@@ -239,7 +205,6 @@ if (success) {
 ```
 
 ### Listing all groups
-
 ```typescript
 const beelines = new Beelines({
   endpoint: "https://api.beelines.ai/graphql",

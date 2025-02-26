@@ -6,13 +6,7 @@ Welcome to the Beelines SDK documentation. This SDK provides a simple and intuit
 
 - [API Reference](./api-reference/index.md)
 
-## Getting Started
-
-The Beelines SDK is designed to be easy to use and integrate into your applications. It provides a set of collections that map to the different resources and concepts in the Beelines platform.
-
 ## Installation
-
-You can install the Beelines SDK using npm or yarn:
 
 ```bash
 # Using npm
@@ -27,9 +21,12 @@ bun add @beelinesai/sdk
 
 ## Authentication
 
-To use the Beelines SDK, you need to authenticate with the Beelines platform. There are two ways to do this:
+To use the Beelines SDK, you need to authenticate with the Beelines platform.
 
 ### Using an API Key
+
+First [login](https://platform.beelines.ai/login) to the Beelines platform and create an API key. 
+You can then use it to authenticate with the SDK like so:
 
 ```typescript
 import { Beelines } from "@beelinesai/sdk";
