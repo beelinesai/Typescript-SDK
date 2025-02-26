@@ -24,7 +24,21 @@ async create(input: CreateGroupInput): Promise<Group>
   - `sourceType` (SourceType, required): Type of the source entity (audience, panel, or developer)
 
 **Returns:**
-- `Group`: The newly created group object
+```typescript
+Group {
+  id: string;             // Unique identifier for the group
+  sourceId: string;       // ID of the source entity for this group
+  sourceType: SourceType; // Type of the source entity
+  name?: string;          // Name of the group (optional)
+  prompt?: string;        // Prompt/instructions for the group (optional)
+  targetSize?: number;    // Target number of agents (optional)
+  status: string;         // Status of the group
+  metadata?: any;         // Additional metadata (optional)
+  createdAt: string;      // Creation timestamp
+  updatedAt: string;      // Last update timestamp
+  source?: any;           // Source entity reference (optional)
+}
+```
 
 ### Get Group by ID
 
@@ -38,7 +52,11 @@ async byId(id: string): Promise<Group>
 - `id` (string): The ID of the group to retrieve
 
 **Returns:**
-- `Group`: The requested group object
+```typescript
+Group {
+  // Same structure as create method
+}
+```
 
 ### List Groups
 
@@ -52,7 +70,9 @@ async list(): Promise<Group[]>
 - None
 
 **Returns:**
-- `Group[]`: Array of group objects
+```typescript
+Group[] // Array of group objects
+```
 
 ### Update a Group
 
@@ -74,7 +94,9 @@ async update(id: string, input: UpdateGroupInput): Promise<boolean>
   - `sourceType` (SourceType, optional): Updated source entity type
 
 **Returns:**
-- Boolean indicating success of the update operation
+```typescript
+boolean // true if update was successful, false otherwise
+```
 
 ### Delete a Group
 
@@ -88,7 +110,9 @@ async delete(id: string): Promise<boolean>
 - `id` (string): The ID of the group to delete
 
 **Returns:**
-- Boolean indicating success of the deletion operation
+```typescript
+boolean // true if deletion was successful, false otherwise
+```
 
 ## Types
 

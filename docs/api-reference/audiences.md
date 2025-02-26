@@ -13,15 +13,35 @@ async create(input: CreateAudienceInput): Promise<Audience>
 ```
 
 **Parameters:**
-- `input` (CreateAudienceInput): Configuration for the new audience
-  - `name` (string): The name of the audience (required)
-  - `description` (string, optional): A description of the audience's purpose
-  - `apiKeyId` (string, optional): API key identifier for the audience
-  - `pricingModel` (any, optional): Pricing model configuration
-  - `metadata` (any, optional): Additional metadata for the audience
+```typescript
+{
+  input: CreateAudienceInput;   // Configuration for the new audience
+}
+
+// CreateAudienceInput
+{
+  name: string;            // The name of the audience (required)
+  description?: string;    // A description of the audience's purpose (optional)
+  apiKeyId?: string;       // API key identifier for the audience (optional)
+  pricingModel?: any;      // Pricing model configuration (optional)
+  metadata?: any;          // Additional metadata for the audience (optional)
+}
+```
 
 **Returns:**
-- `Audience`: The newly created audience object
+```typescript
+Audience {
+  id: string;               // Unique identifier for the audience
+  name: string;             // Name of the audience
+  description?: string;     // Description of the audience (optional)
+  apiKeyId?: string;        // API key identifier (optional)
+  pricingModel?: any;       // Pricing model configuration (optional)
+  metadata?: any;           // Additional metadata (optional)
+  createdAt: string;        // Creation timestamp
+  updatedAt: string;        // Last update timestamp
+  agents?: Agent[];         // Agents in this audience (optional)
+}
+```
 
 ### Get Available Audiences
 
@@ -32,10 +52,14 @@ async available(): Promise<Audience[]>
 ```
 
 **Parameters:**
-- None
+```typescript
+// No parameters
+```
 
 **Returns:**
-- `Audience[]`: Array of available audience objects
+```typescript
+Audience[] // Array of available audience objects
+```
 
 ### Get Audience by ID
 
@@ -46,10 +70,18 @@ async byId(id: string): Promise<Audience>
 ```
 
 **Parameters:**
-- `id` (string): The ID of the audience to retrieve
+```typescript
+{
+  id: string;  // The ID of the audience to retrieve
+}
+```
 
 **Returns:**
-- `Audience`: The requested audience object
+```typescript
+Audience {
+  // Same structure as create method
+}
+```
 
 ### List Audiences
 
@@ -60,10 +92,14 @@ async list(): Promise<Audience[]>
 ```
 
 **Parameters:**
-- None
+```typescript
+// No parameters
+```
 
 **Returns:**
-- `Audience[]`: Array of audience objects
+```typescript
+Audience[] // Array of audience objects
+```
 
 ### Update an Audience
 
@@ -74,15 +110,25 @@ async update(id: string, input: UpdateAudienceInput): Promise<boolean>
 ```
 
 **Parameters:**
-- `id` (string): The ID of the audience to update
-- `input` (UpdateAudienceInput): The properties to update
-  - `name` (string, optional): New name for the audience
-  - `description` (string, optional): Updated description
-  - `pricingModel` (any, optional): Updated pricing model
-  - `metadata` (any, optional): Updated metadata
+```typescript
+{
+  id: string;                 // The ID of the audience to update
+  input: UpdateAudienceInput; // The properties to update
+}
+
+// UpdateAudienceInput
+{
+  name?: string;              // New name for the audience (optional)
+  description?: string;       // Updated description (optional)
+  pricingModel?: any;         // Updated pricing model (optional)
+  metadata?: any;             // Updated metadata (optional)
+}
+```
 
 **Returns:**
-- Boolean indicating success of the update operation
+```typescript
+boolean // true if update was successful, false otherwise
+```
 
 ### Delete an Audience
 
@@ -93,10 +139,16 @@ async delete(id: string): Promise<boolean>
 ```
 
 **Parameters:**
-- `id` (string): The ID of the audience to delete
+```typescript
+{
+  id: string;  // The ID of the audience to delete
+}
+```
 
 **Returns:**
-- Boolean indicating success of the deletion operation
+```typescript
+boolean // true if deletion was successful, false otherwise
+```
 
 ### Add to Audience
 
@@ -107,13 +159,25 @@ async addTo(id: string, input: AddToAudienceInput): Promise<Audience>
 ```
 
 **Parameters:**
-- `id` (string): The ID of the audience to add agents to
-- `input` (AddToAudienceInput): Configuration for adding agents
-  - `prompt` (string, optional): Prompt to guide agent selection
-  - `size` (number, optional): Number of agents to add
+```typescript
+{
+  id: string;                 // The ID of the audience to add agents to
+  input: AddToAudienceInput;  // Configuration for adding agents
+}
+
+// AddToAudienceInput
+{
+  prompt?: string;            // Prompt to guide agent selection (optional)
+  size?: number;              // Number of agents to add (optional)
+}
+```
 
 **Returns:**
-- `Audience`: The updated audience object
+```typescript
+Audience {
+  // Same structure as create method, with updated agents array
+}
+```
 
 ### Generate Audience
 
@@ -124,14 +188,22 @@ async generate(input: GenerateAudienceInput): Promise<Audience>
 ```
 
 **Parameters:**
-- `input` (GenerateAudienceInput): Configuration for the generated audience
-  - `name` (string): The name of the audience (required)
-  - `description` (string, optional): A description of the audience
-  - `apiKeyId` (string, optional): API key identifier
-  - `pricingModel` (any, optional): Pricing model configuration
-  - `metadata` (any, optional): Additional metadata
-  - `prompt` (string, optional): Prompt to guide agent generation
-  - `size` (number, optional): Number of agents to generate
+```typescript
+{
+  input: GenerateAudienceInput;  // Configuration for the generated audience
+}
+
+// GenerateAudienceInput
+{
+  name: string;                 // The name of the audience (required)
+  description?: string;         // A description of the audience (optional)
+  apiKeyId?: string;            // API key identifier (optional)
+  pricingModel?: any;           // Pricing model configuration (optional)
+  metadata?: any;               // Additional metadata (optional)
+  prompt?: string;              // Prompt to guide agent generation (optional)
+  size?: number;                // Number of agents to generate (optional)
+}
+```
 
 **Returns:**
 - `Audience`: The newly generated audience object with its agents

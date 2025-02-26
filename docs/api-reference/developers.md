@@ -13,16 +13,23 @@ async byId(id: string): Promise<Developer>
 ```
 
 **Parameters:**
-- `id` (string): The unique identifier of the developer to retrieve
+```typescript
+{
+  id: string;  // The unique identifier of the developer to retrieve
+}
+```
 
 **Returns:**
-- `Developer`: The requested developer object including their associated auth tokens
-  - `id` (string): Unique identifier for the developer
-  - `email` (string): Email address of the developer
-  - `organizationId` (string, optional): ID of the organization the developer belongs to
-  - `createdAt` (string): Creation timestamp
-  - `updatedAt` (string): Last update timestamp
-  - `authTokens` (AuthToken[], optional): Array of authentication tokens belonging to the developer
+```typescript
+Developer {
+  id: string;           // Unique identifier for the developer
+  email: string;        // Email address of the developer
+  organizationId?: string;  // ID of the organization the developer belongs to (optional)
+  createdAt: string;    // Creation timestamp
+  updatedAt: string;    // Last update timestamp
+  authTokens?: AuthToken[]; // Array of authentication tokens (optional)
+}
+```
 
 ### Get Developer by Email
 
@@ -33,10 +40,18 @@ async byEmail(email: string): Promise<Developer>
 ```
 
 **Parameters:**
-- `email` (string): The email address of the developer to retrieve
+```typescript
+{
+  email: string;  // The email address of the developer to retrieve
+}
+```
 
 **Returns:**
-- `Developer`: The requested developer object
+```typescript
+Developer {
+  // Same structure as byId method
+}
+```
 
 ### Delete Developer
 
@@ -47,10 +62,16 @@ async delete(id: string): Promise<boolean>
 ```
 
 **Parameters:**
-- `id` (string): The ID of the developer to delete
+```typescript
+{
+  id: string;  // The ID of the developer to delete
+}
+```
 
 **Returns:**
-- Boolean indicating success of the deletion operation
+```typescript
+boolean // true if deletion was successful, false otherwise
+```
 
 ## Auth Token Management
 
@@ -63,13 +84,32 @@ async createToken(developerId: string, input: CreateAuthTokenInput): Promise<Aut
 ```
 
 **Parameters:**
-- `developerId` (string): The ID of the developer for whom to create the token
-- `input` (CreateAuthTokenInput): Configuration for the new token
-  - `name` (string, optional): A friendly name for the token
-  - `metadata` (any, optional): Additional metadata to associate with the token
+```typescript
+{
+  developerId: string;           // The ID of the developer for whom to create the token
+  input: CreateAuthTokenInput;   // Configuration for the new token
+}
+
+// CreateAuthTokenInput
+{
+  name?: string;      // A friendly name for the token (optional)
+  metadata?: any;     // Additional metadata to associate with the token (optional)
+}
+```
 
 **Returns:**
-- `AuthToken`: The newly created authentication token
+```typescript
+AuthToken {
+  id: string;          // Unique identifier for the token
+  developerId: string; // ID of the developer who owns the token
+  token: string;       // The actual token string used for authentication
+  name?: string;       // Friendly name for the token (optional)
+  metadata?: any;      // Additional metadata (optional)
+  expiresAt?: string;  // Expiration timestamp (optional)
+  createdAt: string;   // Creation timestamp
+  updatedAt: string;   // Last update timestamp
+}
+```
 
 ### Update Auth Token
 
@@ -80,14 +120,26 @@ async updateToken(id: string, developerId: string, input: UpdateAuthTokenInput):
 ```
 
 **Parameters:**
-- `id` (string): The ID of the token to update
-- `developerId` (string): The ID of the developer who owns the token
-- `input` (UpdateAuthTokenInput): The updated token properties
-  - `name` (string, optional): New friendly name for the token
-  - `metadata` (any, optional): Updated metadata for the token
+```typescript
+{
+  id: string;                   // The ID of the token to update
+  developerId: string;          // The ID of the developer who owns the token
+  input: UpdateAuthTokenInput;  // The updated token properties
+}
+
+// UpdateAuthTokenInput
+{
+  name?: string;      // New friendly name for the token (optional)
+  metadata?: any;     // Updated metadata for the token (optional)
+}
+```
 
 **Returns:**
-- `AuthToken`: The updated authentication token
+```typescript
+AuthToken {
+  // Same structure as createToken method
+}
+```
 
 ### Revoke Auth Token
 
@@ -98,11 +150,17 @@ async revokeToken(id: string, developerId: string): Promise<boolean>
 ```
 
 **Parameters:**
-- `id` (string): The ID of the token to revoke
-- `developerId` (string): The ID of the developer who owns the token
+```typescript
+{
+  id: string;           // The ID of the token to revoke
+  developerId: string;  // The ID of the developer who owns the token
+}
+```
 
 **Returns:**
-- Boolean indicating success of the token revocation
+```typescript
+boolean // true if revocation was successful, false otherwise
+```
 
 ### List Auth Tokens
 
@@ -113,10 +171,16 @@ async listTokens(developerId: string): Promise<AuthToken[]>
 ```
 
 **Parameters:**
-- `developerId` (string): The ID of the developer whose tokens to list
+```typescript
+{
+  developerId: string;  // The ID of the developer whose tokens to list
+}
+```
 
 **Returns:**
-- `AuthToken[]`: Array of authentication tokens
+```typescript
+AuthToken[] // Array of authentication tokens
+```
 
 ### Get Auth Token
 
@@ -127,11 +191,19 @@ async getToken(token: string, developerId: string): Promise<AuthToken>
 ```
 
 **Parameters:**
-- `token` (string): The token string to retrieve
-- `developerId` (string): The ID of the developer who owns the token
+```typescript
+{
+  token: string;        // The token string to retrieve
+  developerId: string;  // The ID of the developer who owns the token
+}
+```
 
 **Returns:**
-- `AuthToken`: The requested authentication token
+```typescript
+AuthToken {
+  // Same structure as createToken method
+}
+```
 
 ## Types
 

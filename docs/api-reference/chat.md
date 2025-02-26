@@ -18,7 +18,12 @@ async get(source: ChatSource): Promise<Chat>
   - `sourceType` (ChatSourceType): Type of the source ('agent' or 'group')
 
 **Returns:**
-- `Chat`: An object containing the latest thread and available threads
+```typescript
+Chat {
+  latestThread: LatestThread; // The most recent thread for this source
+  threads: ThreadLite[];      // Array of available threads
+}
+```
 
 ## Thread Methods
 
@@ -38,7 +43,9 @@ async threads.list(source: ChatSource): Promise<LatestThread[]>
   - `sourceType` (ChatSourceType): Type of the source ('agent' or 'group')
 
 **Returns:**
-- `LatestThread[]`: Array of thread objects
+```typescript
+LatestThread[] // Array of detailed thread objects
+```
 
 ### Create Thread
 
@@ -57,7 +64,9 @@ async threads.new(source: ChatSource, config?: ThreadConfig): Promise<string>
   - `metadata` (ThreadMetadataInput, optional): Additional metadata for the thread
 
 **Returns:**
-- `string`: ID of the newly created thread
+```typescript
+string // ID of the newly created thread
+```
 
 ### Send Message
 
@@ -82,7 +91,9 @@ async threads.message(threadId: string, input: CreateBeelineInput): Promise<stri
   - `model` (AvailableModels, optional): AI model to use for responses
 
 **Returns:**
-- `string`: ID of the created beeline
+```typescript
+string // ID of the created beeline
+```
 
 ### Get Response
 
@@ -96,7 +107,13 @@ async threads.response(beelineId: string): Promise<CompletedBeeline>
 - `beelineId` (string): ID of the beeline to get a response for
 
 **Returns:**
-- `CompletedBeeline`: Object containing the status, responses, and summary
+```typescript
+CompletedBeeline {
+  status: BeelineStatus;     // Status of the beeline (pending, processing, completed, error)
+  responses?: BeelineResponse[]; // Array of responses from agents (optional)
+  summary?: string;          // Summary of the responses (optional)
+}
+```
 
 ## Types
 
