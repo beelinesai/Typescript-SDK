@@ -80,6 +80,16 @@ To get started, you'll need an API key. Contact us to get one!
 
 ## 📚 Documentation
 
-For more detailed documentation and examples, visit our [documentation site](https://docs.beelines.ai).
+For detailed API reference and examples, check out our SDK documentation:
+
+- [API Reference Overview](../docs/api-reference/index.md)
+- **Collections**:
+  - [Developers](../docs/api-reference/developers.md) - Managing developers and authentication
+  - [Agents](../docs/api-reference/agents.md) - Creating and managing AI agents
+  - [Audiences](../docs/api-reference/audiences.md) - Building and managing audiences
+  - [Groups](../docs/api-reference/groups.md) - Organizing agents into groups
+  - [Chat](../docs/api-reference/chat.md) - Conversing with agents and groups
+
+For more information and guides, visit our [documentation site](https://docs.beelines.ai).
 
 Happy coding! 🐝✨
